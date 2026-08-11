@@ -72,37 +72,6 @@ importers:
         specifier: ~4.1.10
         version: 4.1.10(@types/node@24.13.3)(@vitest/coverage-v8@4.1.10)(@vitest/ui@4.1.10)(vite@8.2.1(@types/node@24.13.3)(jiti@2.4.2)(yaml@2.9.0))
 
-  packages/async:
-    dependencies:
-      tslib:
-        specifier: ^2.3.0
-        version: 2.8.1
-
-  packages/colors:
-    dependencies:
-      tslib:
-        specifier: ^2.3.0
-        version: 2.8.1
-
-  packages/strings:
-    dependencies:
-      tslib:
-        specifier: ^2.3.0
-        version: 2.8.1
-    devDependencies:
-      '@org/utils':
-        specifier: workspace:*
-        version: link:../utils
-      vite:
-        specifier: ^8.1.4
-        version: 8.2.1(@types/node@24.13.3)(jiti@2.4.2)(yaml@2.9.0)
-
-  packages/utils:
-    dependencies:
-      tslib:
-        specifier: ^2.3.0
-        version: 2.8.1
-
 packages:
 
   '@babel/code-frame@7.29.7':
