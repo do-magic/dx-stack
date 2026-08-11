@@ -9,6 +9,7 @@
     "@nx/eslint": "23.1.1",
     "@nx/eslint-plugin": "23.1.1",
     "@nx/js": "23.1.1",
+    "@nx/next": "23.1.1",
     "@nx/vite": "23.1.1",
     "@nx/vitest": "23.1.1",
     "@nx/web": "23.1.1",
@@ -39,5 +40,10 @@
         }
       }
     }
+  },
+  "dependencies": {
+    "next": "~16.1.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   }
 }
