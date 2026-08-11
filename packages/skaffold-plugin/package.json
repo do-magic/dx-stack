@@ -1,0 +1,60 @@
+{
+  "name": "@dxs/skaffold",
+  "version": "0.0.1",
+  "type": "commonjs",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "@dxs/source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "!**/*.tsbuildinfo",
+    "generators.json"
+  ],
+  "nx": {
+    "name": "skaffold",
+    "sourceRoot": "packages/skaffold-plugin/src",
+    "targets": {
+      "build": {
+        "executor": "@nx/js:swc",
+        "outputs": [
+          "{options.outputPath}"
+        ],
+        "options": {
+          "outputPath": "packages/skaffold-plugin/dist",
+          "main": "packages/skaffold-plugin/src/index.ts",
+          "tsConfig": "packages/skaffold-plugin/tsconfig.lib.json",
+          "skipTypeCheck": true,
+          "stripLeadingPaths": true,
+          "assets": [
+            {
+              "input": "./packages/skaffold-plugin/src",
+              "glob": "**/!(*.ts)",
+              "output": "."
+            },
+            {
+              "input": "./packages/skaffold-plugin/src",
+              "glob": "**/*.d.ts",
+              "output": "."
+            }
+          ]
+        }
+      }
+    }
+  },
+  "dependencies": {
+    "@nx/devkit": "23.1.1",
+    "@swc/helpers": "~0.5.18",
+    "nx": "23.1.1",
+    "yaml": "^2.9.0"
+  },
+  "generators": "./generators.json"
+}

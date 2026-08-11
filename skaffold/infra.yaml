@@ -1,0 +1,13 @@
+apiVersion: skaffold/v4beta13
+kind: Config
+metadata:
+  name: dx-stack-infra
+manifests:
+  rawYaml:
+    - infra/*.yaml
+deploy:
+  helm:
+  kubectl:
+    flags:
+      global:
+        - --context=minikube

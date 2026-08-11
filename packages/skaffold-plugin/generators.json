@@ -1,0 +1,9 @@
+{
+  "generators": {
+    "sync": {
+      "factory": "./dist/generators/sync/sync",
+      "schema": "./dist/generators/sync/schema.json",
+      "description": "sync generator"
+    }
+  }
+}

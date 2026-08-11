@@ -1,0 +1,3 @@
+*.yaml
+!infra.yaml
+!infra/**/*
