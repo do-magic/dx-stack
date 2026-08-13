@@ -8,6 +8,9 @@
     },
     {
       "path": "./packages/skaffold-plugin"
+    },
+    {
+      "path": "./apps/example"
     }
   ],
   "compilerOptions": {}
