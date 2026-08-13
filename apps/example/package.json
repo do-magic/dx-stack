@@ -2,6 +2,9 @@
   "name": "@dxs/example",
   "version": "0.0.1",
   "private": true,
+  "nx": {
+    "name": "example"
+  },
   "dependencies": {
     "next": "~16.1.6",
     "react": "^19.0.0",
