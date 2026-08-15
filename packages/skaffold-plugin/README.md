@@ -235,6 +235,41 @@ feature) and `useDockerCLI: true` (routes the build through the real `docker`
 CLI instead of skaffold's own built-in builder, which is what makes those
 BuildKit cache mounts actually work against the local daemon).
 
+## next.config.js maintenance
+
+For a Next.js app, the generator also maintains two properties in that app's
+own `<project root>/next.config.js` (`syncNextConfig`) — `output` and
+`outputFileTracingRoot`, the two settings the runner image's
+`.next/standalone` build actually depends on. Unlike the Dockerfile, this
+file is **never fully generated or overwritten** — everything else in it
+(other properties, comments, formatting) is left exactly as written. If the
+app has no `next.config.js` at all yet, a minimal one is created with just
+these two properties.
+
+- `output` is always set (or corrected) to `'standalone'`.
+- `outputFileTracingRoot` is always set to `path.join(__dirname, '<relative
+path to the workspace root>')`, computed via `@nx/devkit`'s `workspaceRoot`
+  combined with the app's own root — so it stays correct regardless of how
+  deeply nested the app is, rather than assuming a fixed directory depth.
+  Without this, Next's output file tracing defaults to the app's own
+  directory in a monorepo, silently excluding workspace dependencies (and
+  pnpm-hoisted `node_modules`) that live outside it — the exact gap this is
+  meant to close, matching Next.js's own documented monorepo guidance.
+- If neither property already exists, `const path = require('path');` (or
+  `import * as path from 'path';`, matching the file's own CommonJS/ES module
+  style) is added too, since `outputFileTracingRoot`'s value always needs it.
+
+Both are treated as generator-managed: an existing, already-correct value is
+left untouched (regenerating produces a byte-identical file), but an
+existing, _incorrect_ one is overwritten — same as the Dockerfile's
+philosophy, just scoped to these two properties instead of the whole file.
+Implemented via the TypeScript compiler API (parsed as JS, `ts.ScriptKind.JS`)
+to locate the exported config object (`module.exports = {...}`,
+`export default {...}`, or either via an intermediate `const nextConfig =
+{...}` binding) and splice in minimal, targeted text edits at the exact AST
+node boundaries — rather than a full reprint, which would risk losing
+comments or reformatting things this generator has no business touching.
+
 ## Production mode
 
 Every generated `skaffold/<namespace>.yaml` also carries a `production`
