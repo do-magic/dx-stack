@@ -22,6 +22,6 @@ spec:
             - containerPort: 3000
           env:
             - name: PORT
-              value: "3000"
+              value: '3000'
             - name: HOSTNAME
-              value: "0.0.0.0"
+              value: '0.0.0.0'

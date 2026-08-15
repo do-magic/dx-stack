@@ -622,11 +622,7 @@ export async function syncGenerator(tree: Tree): Promise<SyncGeneratorResult> {
 
     write(
       joinPathFragments(app.data.root, 'Dockerfile'),
-      buildDockerfile(
-        framework,
-        app,
-        dependenciesByApp.get(app.name) ?? [],
-      ),
+      buildDockerfile(framework, app, dependenciesByApp.get(app.name) ?? []),
     );
   }
 

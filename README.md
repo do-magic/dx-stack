@@ -4,6 +4,7 @@
 
 ✨ A repository showcasing key [Nx](https://nx.dev) features for TypeScript monorepos ✨
 🚀 If you haven't connected to Nx Cloud yet, [complete your setup here](https://cloud.nx.app/get-started). Get faster builds with remote caching, distributed task execution, and self-healing CI. [See how your workspace can benefit](#nx-cloud).
+
 ## 📦 Project Overview
 
 This repository demonstrates a production-ready TypeScript monorepo with:

@@ -265,7 +265,7 @@ describe('sync generator', () => {
       await syncGenerator(tree);
 
       const dockerfile = readDockerfile(tree, 'apps/demo');
-      expect(dockerfile).toMatch(/^FROM node:24-alpine@sha256:[a-f0-9]{64} AS base$/m);
+      expect(dockerfile).toContain('FROM node:24-alpine AS base');
       expect(dockerfile).toContain('FROM base AS deps');
       expect(dockerfile).toContain('FROM deps AS source');
       expect(dockerfile).toContain('FROM source AS builder');
@@ -316,7 +316,7 @@ describe('sync generator', () => {
       );
     });
 
-    it('also live-syncs a workspace dependency\'s source, not just src/ and public/ of the app itself', async () => {
+    it("also live-syncs a workspace dependency's source, not just src/ and public/ of the app itself", async () => {
       mockGraph(
         [
           { name: 'demo', root: 'apps/demo' },

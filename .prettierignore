@@ -4,3 +4,11 @@
 /.nx/cache
 /.nx/workspace-data
 .nx/self-healing
+
+# lockfiles are machine-generated; reformatting them is pure diff noise
+pnpm-lock.yaml
+
+# vendored, tool-synced skill docs (identical copies across .agents/.github/.opencode)
+.agents/skills
+.github/skills
+.opencode/skills

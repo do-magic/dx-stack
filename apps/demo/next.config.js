@@ -4,7 +4,7 @@ const path = require('path');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    standalone: true,
+  standalone: true,
   // in an Nx/pnpm monorepo, output file tracing otherwise defaults to this
   // app's own directory, silently excluding workspace dependencies (and
   // pnpm-hoisted node_modules) that live outside it from the standalone build

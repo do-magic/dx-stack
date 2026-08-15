@@ -82,7 +82,9 @@
             "parallel": false
           }
         },
-        "syncGenerators": ["@dxs/skaffold:sync"]
+        "syncGenerators": [
+          "@dxs/skaffold:sync"
+        ]
       }
     }
   },
