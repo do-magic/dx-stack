@@ -5,6 +5,9 @@
   "references": [
     {
       "path": "./packages/skaffold-plugin"
+    },
+    {
+      "path": "./apps/demo"
     }
   ],
   "compilerOptions": {}
