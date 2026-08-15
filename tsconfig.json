@@ -4,9 +4,6 @@
   "files": [],
   "references": [
     {
-      "path": "./apps/demo"
-    },
-    {
       "path": "./packages/skaffold-plugin"
     }
   ],
