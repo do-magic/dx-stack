@@ -4,7 +4,7 @@ metadata:
   name: dx-stack-infra
 manifests:
   rawYaml:
-    - infra/*.yaml
+    - skaffold/infra/*.yaml
 deploy:
   helm:
   kubectl:

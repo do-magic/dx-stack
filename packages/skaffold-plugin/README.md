@@ -94,6 +94,33 @@ that file if none of its apps declare a `Service`. It's untouched by the
 `production` profile (see below), since only `build.artifacts` differs
 between the two.
 
+## Infrastructure (`infra.yaml`)
+
+`skaffold/infra.yaml` (and anything under `skaffold/infra/`) is entirely
+hand-maintained, for components meant to outlive any single dev session —
+a namespace today, potentially a database with a persistent volume later.
+It's deliberately **not** `requires`-loaded by the generated
+`skaffold/skaffold.yaml`: `skaffold dev` tears down everything it deployed
+when it exits, and bundling infra into that same lifecycle would mean losing
+persistent data on every `Ctrl+C`.
+
+Instead, both the `development` and `production` configurations of the
+`skaffold` Nx target run `skaffold run -f skaffold/infra.yaml` *before*
+`skaffold dev -f skaffold/skaffold.yaml [...]`. `skaffold run` deploys and
+returns immediately — no watch loop, no cleanup-on-exit — so whatever
+`infra.yaml` declares stays running (across dev-loop restarts, and across
+`minikube stop`/`start`, as long as minikube's own disk persists) while the
+apps deployed by the `skaffold dev` step that follows remain exactly as
+ephemeral as before.
+
+One consequence worth knowing if you ever edit `infra.yaml` by hand: since
+it's always invoked as its *own* entrypoint now (never `requires`-loaded),
+its `manifests.rawYaml` paths resolve relative to the invoking working
+directory (the workspace root, since that's where the `skaffold` Nx target's
+commands run) rather than relative to `skaffold/` itself — hence
+`skaffold/infra/*.yaml` rather than the shorter `infra/*.yaml` you'd expect
+from a `requires`-loaded module.
+
 ## Dockerfile generation
 
 For each candidate app (has a qualifying `k8s/` folder), the generator runs
@@ -128,6 +155,16 @@ scoped to the app and its workspace dependencies) → `source` (copies source)
 → `builder` (`nx build <app> --skip-sync`) and, as siblings both built from
 `source`, `dev` (`nx dev <app> --skip-sync`, watching for changes) and
 `runner` (the `.next/standalone` production output).
+
+The `runner` stage sets `ENV HOSTNAME="0.0.0.0"` unconditionally — Next.js's
+standalone `server.js` otherwise binds to whatever `HOSTNAME` happens to be
+set to, and Kubernetes auto-injects one equal to the pod name, which the
+server can't actually bind to (breaks `kubectl port-forward` and anything
+else expecting the app to listen on all interfaces). Baking the fix into the
+image means every app gets it automatically, rather than depending on each
+hand-written `k8s/deployment.yaml` remembering to set `HOSTNAME` itself as an
+override — a real gap in this workspace before this was added: some apps'
+manifests set it, some didn't.
 
 `WORKDIR` is `/workspace`, and every `COPY` mirrors the app's local path
 beneath it (e.g. `apps/demo` on disk becomes `/workspace/apps/demo` in the
@@ -179,6 +216,23 @@ those of its transitive Nx workspace dependencies (explicit and implicit —
 `npm:` packages have no node in the graph and are skipped, since pnpm
 installs those on its own from the lockfile.
 
+A few smaller things the template does throughout, all following Docker's
+own [Next.js guide](https://docs.docker.com/guides/nextjs/):
+
+- `base` is pinned to a specific `node:24-alpine` **digest** (`BASE_IMAGE`),
+  not just the floating tag — reproducible across rebuilds, at the cost of
+  needing a deliberate bump (tag *and* digest together) to pick up a newer
+  patch release; nothing renews this automatically.
+- `base` sets `ENV NEXT_TELEMETRY_DISABLED=1`, inherited by every later
+  stage — quieter build/dev/runtime logs, and no telemetry pings from
+  ephemeral dev or CI containers.
+- `builder`'s `nx build` call gets its own BuildKit cache mount on
+  `<project root>/.next/cache` (`id=next-<app>`, one per app to avoid
+  collisions), mirroring the `deps` stage's pnpm store cache mount — lets
+  Next.js's own incremental compiler cache survive across separate image
+  rebuilds (relevant mainly for the `production` profile, since `dev`
+  doesn't rebuild the image on every change).
+
 Every generated config's `build.local` sets `useBuildkit: true` (required —
 the `deps` stage's `RUN --mount=type=cache` pnpm store cache is a BuildKit
 feature) and `useDockerCLI: true` (routes the build through the real `docker`
@@ -223,9 +277,10 @@ qualifying entirely) is deleted — a file without the marker is never
 touched, so hand-authored files (including every unrecognized-framework
 Dockerfile) are always safe.
 
-`skaffold/skaffold.yaml` is the one entrypoint, `requires`-ing `infra.yaml`
-plus one file per namespace in use (dev and production both go through it —
-see Production mode above).
+`skaffold/skaffold.yaml` is the one entrypoint, `requires`-ing one file per
+namespace in use (dev and production both go through it — see Production
+mode above; `requires` is omitted entirely if there are no apps at all).
+`infra.yaml` is deliberately not part of this — see "Infrastructure" above.
 
 As a last-resort safety net, writing any generated file twice in the same run
 (e.g. two namespaces somehow producing the same file name) fails `nx sync`

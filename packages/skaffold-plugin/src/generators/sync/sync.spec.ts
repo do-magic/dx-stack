@@ -124,16 +124,14 @@ describe('sync generator', () => {
     tree = createTreeWithEmptyWorkspace();
   });
 
-  it('generates a top-level skaffold.yaml requiring only infra when there are no apps', async () => {
+  it('generates a top-level skaffold.yaml with no requires when there are no apps', async () => {
     mockApps([]);
 
     await syncGenerator(tree);
 
     expect(tree.exists('skaffold/skaffold.yaml')).toBe(true);
     expect(tree.exists('skaffold/default.yaml')).toBe(false);
-    expect(readConfig(tree, 'skaffold/skaffold.yaml').requires).toEqual([
-      { path: 'infra.yaml' },
-    ]);
+    expect(readConfig(tree, 'skaffold/skaffold.yaml').requires).toBeUndefined();
   });
 
   describe('namespace assignment', () => {
@@ -181,7 +179,6 @@ describe('sync generator', () => {
       ]);
 
       expect(readConfig(tree, 'skaffold/skaffold.yaml').requires).toEqual([
-        { path: 'infra.yaml' },
         { path: 'apps.yaml' },
       ]);
     });
@@ -268,7 +265,7 @@ describe('sync generator', () => {
       await syncGenerator(tree);
 
       const dockerfile = readDockerfile(tree, 'apps/demo');
-      expect(dockerfile).toContain('FROM node:24-alpine AS base');
+      expect(dockerfile).toMatch(/^FROM node:24-alpine@sha256:[a-f0-9]{64} AS base$/m);
       expect(dockerfile).toContain('FROM base AS deps');
       expect(dockerfile).toContain('FROM deps AS source');
       expect(dockerfile).toContain('FROM source AS builder');
@@ -280,6 +277,11 @@ describe('sync generator', () => {
       expect(dockerfile).toContain('COPY apps/demo apps/demo');
       expect(dockerfile).toContain('nx build demo --skip-sync');
       expect(dockerfile).toContain('"nx", "dev", "demo", "--skip-sync"');
+      expect(dockerfile).toContain('ENV HOSTNAME="0.0.0.0"');
+      expect(dockerfile).toContain('ENV NEXT_TELEMETRY_DISABLED=1');
+      expect(dockerfile).toContain(
+        '--mount=type=cache,id=next-demo,target=/workspace/apps/demo/.next/cache',
+      );
     });
 
     it('places the marker comment after the syntax directive, never before it', async () => {
@@ -467,9 +469,9 @@ describe('sync generator', () => {
       await syncGenerator(tree);
 
       expect(tree.exists('skaffold/default.yaml')).toBe(false);
-      expect(readConfig(tree, 'skaffold/skaffold.yaml').requires).toEqual([
-        { path: 'infra.yaml' },
-      ]);
+      expect(
+        readConfig(tree, 'skaffold/skaffold.yaml').requires,
+      ).toBeUndefined();
     });
 
     it('excludes an app with an unrecognized framework and no existing Dockerfile', async () => {
@@ -481,9 +483,9 @@ describe('sync generator', () => {
       await syncGenerator(tree);
 
       expect(tree.exists('skaffold/default.yaml')).toBe(false);
-      expect(readConfig(tree, 'skaffold/skaffold.yaml').requires).toEqual([
-        { path: 'infra.yaml' },
-      ]);
+      expect(
+        readConfig(tree, 'skaffold/skaffold.yaml').requires,
+      ).toBeUndefined();
     });
 
     it('includes an app with an unrecognized framework if it already has a Dockerfile, and never touches it', async () => {
@@ -562,9 +564,9 @@ describe('sync generator', () => {
 
       expect(tree.exists('skaffold/default.yaml')).toBe(false);
       expect(tree.exists('apps/demo/Dockerfile')).toBe(false);
-      expect(readConfig(tree, 'skaffold/skaffold.yaml').requires).toEqual([
-        { path: 'infra.yaml' },
-      ]);
+      expect(
+        readConfig(tree, 'skaffold/skaffold.yaml').requires,
+      ).toBeUndefined();
     });
 
     it('rejects a project name that is not a valid Docker image name', async () => {
@@ -682,7 +684,6 @@ describe('sync generator', () => {
       expect(tree.exists('skaffold/staging-namespace.yaml')).toBe(false);
       expect(tree.exists('skaffold/production.yaml')).toBe(true);
       expect(readConfig(tree, 'skaffold/skaffold.yaml').requires).toEqual([
-        { path: 'infra.yaml' },
         { path: 'production.yaml' },
       ]);
     });

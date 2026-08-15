@@ -180,6 +180,7 @@ ${GENERATED_FILE_MARKER}
 FROM node:24-alpine AS base
 RUN corepack enable && corepack prepare pnpm@11.21.0 --activate
 WORKDIR ${WORKSPACE_DIR}
+ENV NEXT_TELEMETRY_DISABLED=1
 
 FROM base AS deps
 COPY pnpm-workspace.yaml pnpm-lock.yaml package.json ./
@@ -192,7 +193,8 @@ COPY nx.json tsconfig.base.json ./
 ${sourceCopies}
 
 FROM source AS builder
-RUN pnpm exec nx build ${app.name} --skip-sync
+RUN --mount=type=cache,id=next-${app.name},target=${WORKSPACE_DIR}/${app.data.root}/.next/cache \\
+    pnpm exec nx build ${app.name} --skip-sync
 
 FROM source AS dev
 ENV NODE_ENV=development
@@ -202,6 +204,7 @@ CMD ["pnpm", "exec", "nx", "dev", "${app.name}", "--skip-sync"]
 FROM base AS runner
 ENV NODE_ENV=production
 ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
 RUN addgroup --system --gid 1001 nodejs \\
     && adduser --system --uid 1001 nextjs
 
@@ -662,10 +665,13 @@ export async function syncGenerator(tree: Tree): Promise<SyncGeneratorResult> {
         metadata: {
           name: 'dx-stack',
         },
-        requires: [
-          { path: 'infra.yaml' },
-          ...namespaces.map((namespace) => ({ path: `${namespace}.yaml` })),
-        ],
+        ...(namespaces.length > 0
+          ? {
+              requires: namespaces.map((namespace) => ({
+                path: `${namespace}.yaml`,
+              })),
+            }
+          : {}),
       }),
   );
 

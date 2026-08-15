@@ -68,6 +68,7 @@
           "development": {
             "commands": [
               "eval $(minikube docker-env)",
+              "skaffold run -f skaffold/infra.yaml",
               "skaffold dev -f skaffold/skaffold.yaml"
             ],
             "parallel": false
@@ -75,6 +76,7 @@
           "production": {
             "commands": [
               "eval $(minikube docker-env)",
+              "skaffold run -f skaffold/infra.yaml",
               "skaffold dev -f skaffold/skaffold.yaml -p production"
             ],
             "parallel": false
