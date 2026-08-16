@@ -25,8 +25,12 @@ implementation detail, not a stable place to detect a framework from.
 
 ## Dockerfile generation
 
-The template (`buildNextJsDockerfile`, `src/lib/dockerfile.ts`) is a fixed
-multi-stage build — `base` → `deps` (install, scoped to the app and its
+The template itself lives in `src/lib/dockerfile.ejs`, rendered via
+[EJS](https://ejs.co/) by `buildNextJsDockerfile` (`src/lib/dockerfile.ts`),
+which just reads the file (co-located, resolved via `__dirname` so it works
+both from source and from the built `dist/` — see the `assets` glob on this
+project's `build` target) and renders it with the app/dependency data. It's a
+fixed multi-stage build — `base` → `deps` (install, scoped to the app and its
 workspace dependencies) → `source` (copies source) → `builder`
 (`nx build <app> --skip-sync`) and, as siblings both built from `source`,
 `dev` (`nx dev <app> --skip-sync`, watching for changes — the stage name
