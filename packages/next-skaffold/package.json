@@ -51,10 +51,13 @@
     }
   },
   "dependencies": {
+    "@dxs/skaffold": "workspace:*",
     "@nx/devkit": "23.1.1",
     "@swc/helpers": "~0.5.18",
     "nx": "23.1.1",
-    "typescript": "catalog:",
+    "typescript": "catalog:"
+  },
+  "devDependencies": {
     "yaml": "^2.9.0"
   },
   "generators": "./generators.json"
