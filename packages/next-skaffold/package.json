@@ -1,6 +1,8 @@
 {
   "name": "@dxs/next-skaffold",
   "version": "0.0.1",
+  "license": "MIT",
+  "author": "Sebastian Velten <velten.seb@web.de>",
   "type": "commonjs",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -17,7 +19,8 @@
   "files": [
     "dist",
     "!**/*.tsbuildinfo",
-    "generators.json"
+    "generators.json",
+    "LICENSE"
   ],
   "nx": {
     "name": "next-skaffold",
@@ -52,12 +55,14 @@
   },
   "dependencies": {
     "@dxs/skaffold": "workspace:*",
-    "@nx/devkit": "23.1.1",
     "@swc/helpers": "~0.5.18",
     "@types/ejs": "^3.1.5",
     "ejs": "^6.0.1",
-    "nx": "23.1.1",
     "typescript": "catalog:"
+  },
+  "peerDependencies": {
+    "@nx/devkit": "^23.0.0",
+    "nx": "^23.0.0"
   },
   "devDependencies": {
     "yaml": "^2.9.0"

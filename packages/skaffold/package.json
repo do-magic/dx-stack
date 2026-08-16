@@ -1,6 +1,8 @@
 {
   "name": "@dxs/skaffold",
   "version": "0.0.1",
+  "license": "MIT",
+  "author": "Sebastian Velten <velten.seb@web.de>",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -16,7 +18,8 @@
   },
   "files": [
     "dist",
-    "!**/*.tsbuildinfo"
+    "!**/*.tsbuildinfo",
+    "LICENSE"
   ],
   "nx": {
     "name": "skaffold",
@@ -38,9 +41,11 @@
     }
   },
   "dependencies": {
-    "@nx/devkit": "23.1.1",
     "@swc/helpers": "~0.5.18",
-    "nx": "23.1.1",
     "yaml": "^2.9.0"
+  },
+  "peerDependencies": {
+    "@nx/devkit": "^23.0.0",
+    "nx": "^23.0.0"
   }
 }

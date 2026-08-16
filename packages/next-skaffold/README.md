@@ -1,6 +1,7 @@
 # @dxs/next-skaffold
 
-The Next.js implementation of [`@dxs/skaffold`](../skaffold/README.md)'s
+The Next.js implementation of
+[`@dxs/skaffold`](https://www.npmjs.com/package/@dxs/skaffold)'s
 `FrameworkAdapter` contract (`nextJsAdapter`, `src/lib/next-adapter.ts`).
 Everything framework-agnostic — app discovery, namespace assignment, port
 forwarding, the `production` profile, generated-file pruning — lives in
@@ -9,10 +10,31 @@ specific to Next.js: `activates` (detecting a Next.js app), the generated
 Dockerfile, the dependency sync paths it needs, and `next.config.js`
 maintenance.
 
-The actual `sync` generator (`src/generators/sync/sync.ts`) is a one-line
-wrapper: `createSkaffoldSyncGenerator([nextJsAdapter])`. It runs
-automatically as part of `nx run @dxs/source:skaffold` (via `syncGenerators`
-on the `skaffold` target), and can be run directly with `nx sync`.
+## Installation
+
+```sh
+npm install @dxs/next-skaffold
+```
+
+Then add it to your `syncGenerators`, e.g. on whichever Nx target you use to
+run skaffold (a plain `nx.json`-level `sync.globalGenerators` array works
+too):
+
+```jsonc
+{
+  "targets": {
+    "skaffold": {
+      // ... your own executor/commands to run skaffold itself
+      "syncGenerators": ["@dxs/next-skaffold:sync"],
+    },
+  },
+}
+```
+
+The `sync` generator (`src/generators/sync/sync.ts`) is a one-line wrapper:
+`createSkaffoldSyncGenerator([nextJsAdapter])`. Once wired in, it runs
+automatically before the target it's attached to, and can also be run
+directly with `nx sync`.
 
 ## Detecting a Next.js app
 
@@ -20,8 +42,8 @@ on the `skaffold` target), and can be run directly with `nx sync`.
 `dependencies`/`devDependencies` and checks for a `next` entry. Deliberately
 based on the app's own declared dependencies rather than Nx's project graph
 or target commands, since `graph.dependencies` doesn't include `npm:` edges
-in this workspace and target executors/commands are a plugin-version-specific
-implementation detail, not a stable place to detect a framework from.
+and target executors/commands are a plugin-version-specific implementation
+detail, not a stable place to detect a framework from.
 
 ## Dockerfile generation
 
@@ -44,8 +66,8 @@ server can't actually bind to (breaks `kubectl port-forward` and anything
 else expecting the app to listen on all interfaces). Baking the fix into the
 image means every app gets it automatically, rather than depending on each
 hand-written `k8s/deployment.yaml` remembering to set `HOSTNAME` itself as an
-override — a real gap in this workspace before this was added: some apps'
-manifests set it, some didn't.
+override — easy to forget, and a Deployment that's missing it fails silently
+in exactly this way rather than erroring out clearly.
 
 `WORKDIR` is `/workspace`, and every `COPY` mirrors the app's local path
 beneath it (e.g. `apps/demo` on disk becomes `/workspace/apps/demo` in the

@@ -1,19 +1,36 @@
 # @dxs/skaffold
 
-The framework-agnostic core behind this workspace's skaffold sync generators.
-It owns everything about assembling and pruning `skaffold/` config that
-doesn't depend on which framework an app is built with — app discovery,
-namespace assignment/validation, port-forward derivation, the `production`
-profile, and generated-file marker/pruning — and exposes a small contract,
-`FrameworkAdapter`, that framework-specific packages implement to plug into
-it. `@dxs/next-skaffold` is the first (and so far only) implementation, for
-Next.js apps; a hypothetical future `@dxs/angular-skaffold` would implement
-the same contract for Angular apps.
+The framework-agnostic core behind an Nx monorepo's skaffold sync
+generators. It owns everything about assembling and pruning `skaffold/`
+config that doesn't depend on which framework an app is built with — app
+discovery, namespace assignment/validation, port-forward derivation, the
+`production` profile, and generated-file marker/pruning — and exposes a
+small contract, `FrameworkAdapter`, that framework-specific packages
+implement to plug into it.
+[`@dxs/next-skaffold`](https://www.npmjs.com/package/@dxs/next-skaffold) is
+the first (and so far only) implementation, for Next.js apps; a hypothetical
+future `@dxs/angular-skaffold` would implement the same contract for Angular
+apps.
 
-This package ships no Nx generator of its own. A framework package calls
-`createSkaffoldSyncGenerator([...adapters])` and exports the result as its
-own `sync` generator — see `@dxs/next-skaffold`'s `src/generators/sync/sync.ts`
-for the (one-line) pattern.
+**This package alone does nothing for you** — it ships no Nx generator of
+its own, only the `createSkaffoldSyncGenerator` factory that a
+framework-specific package (like `@dxs/next-skaffold`) calls and exports as
+its own `sync` generator. If you just want to get skaffold configs generated
+for a Next.js monorepo, install `@dxs/next-skaffold` instead — you'll only
+need this package directly if you're writing a new framework adapter (see
+the contract below).
+
+## Installation
+
+This package is meant to be consumed by a framework adapter package, not
+installed directly in most cases. If you're implementing a new adapter:
+
+```sh
+npm install @dxs/skaffold
+```
+
+It requires `nx` and `@nx/devkit` (peer dependencies) already present in
+your workspace, as any Nx workspace running generators would have.
 
 ## The `FrameworkAdapter` contract
 
