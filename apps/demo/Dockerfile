@@ -9,12 +9,14 @@ ENV NEXT_TELEMETRY_DISABLED=1
 FROM base AS deps
 COPY pnpm-workspace.yaml pnpm-lock.yaml package.json ./
 COPY apps/demo/package.json apps/demo/package.json
+COPY packages/demo-lib/package.json packages/demo-lib/package.json
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
     pnpm install --frozen-lockfile
 
 FROM deps AS source
 COPY nx.json tsconfig.base.json ./
 COPY apps/demo apps/demo
+COPY packages/demo-lib packages/demo-lib
 
 FROM source AS builder
 RUN --mount=type=cache,id=next-demo,target=/workspace/apps/demo/.next/cache \
