@@ -6,6 +6,7 @@
     "name": "demo"
   },
   "dependencies": {
+    "@dxs/demo-lib": "workspace:*",
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:"

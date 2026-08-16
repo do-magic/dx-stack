@@ -1,3 +1,4 @@
+import { DemoLib } from '@dxs/demo-lib';
 import styles from './page.module.scss';
 
 export default function Index() {
@@ -16,6 +17,8 @@ export default function Index() {
               Welcome demo 👋
             </h1>
           </div>
+
+          <DemoLib />
 
           <div id="hero" className="rounded">
             <div className="text-container">
