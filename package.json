@@ -57,7 +57,22 @@
         "options": {
           "port": 4873,
           "config": ".verdaccio/config.yml",
-          "storage": "tmp/local-registry/storage"
+          "storage": "tmp/local-registry/storage",
+          "scopes": [
+            "@dxs"
+          ]
+        }
+      },
+      "local-publish": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "pnpm nx release publish --registry=http://localhost:4873"
+        }
+      },
+      "release-commit": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "pnpm nx release --skip-publish"
         }
       },
       "minikube": {
