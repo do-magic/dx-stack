@@ -90,7 +90,7 @@
             "commands": [
               "eval $(minikube docker-env)",
               "skaffold run -f skaffold/infra.yaml",
-              "skaffold dev -f skaffold/skaffold.yaml"
+              "skaffold dev -f skaffold/skaffold.yaml --port-forward=services"
             ],
             "parallel": false
           },
@@ -98,7 +98,7 @@
             "commands": [
               "eval $(minikube docker-env)",
               "skaffold run -f skaffold/infra.yaml",
-              "skaffold dev -f skaffold/skaffold.yaml -p production"
+              "skaffold dev -f skaffold/skaffold.yaml -p production --port-forward=services"
             ],
             "parallel": false
           }

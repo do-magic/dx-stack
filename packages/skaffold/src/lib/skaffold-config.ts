@@ -1,4 +1,4 @@
-import { Tree, joinPathFragments } from '@nx/devkit';
+import { Tree } from '@nx/devkit';
 import * as yaml from 'yaml';
 import type {
   FrameworkAdapter,
@@ -7,7 +7,6 @@ import type {
 } from './framework-adapter.ts';
 import { buildArtifact, buildProductionArtifact } from './artifacts.ts';
 import { DEFAULT_NAMESPACE } from './namespace.ts';
-import { getServicePortForwards } from './k8s-resources.ts';
 
 export function buildNamespaceManifest(namespace: string) {
   if (namespace === DEFAULT_NAMESPACE) {
@@ -33,10 +32,6 @@ export function buildNamespaceConfig(
   activeAdapters: Map<string, FrameworkAdapter | undefined>,
   dependenciesByApp: Map<string, WorkspaceDependency[]>,
 ) {
-  const portForward = apps.flatMap((app) =>
-    getServicePortForwards(tree, joinPathFragments(app.root, 'k8s'), namespace),
-  );
-
   const namespaceManifestPath =
     namespace !== DEFAULT_NAMESPACE ? `${namespace}-namespace.yaml` : undefined;
 
@@ -76,7 +71,6 @@ export function buildNamespaceConfig(
         },
       },
     },
-    ...(portForward.length > 0 ? { portForward } : {}),
     // activated with `-p production`; skaffold propagates an activated
     // profile name to every required config that defines a matching one, so
     // `-p production` on the top-level skaffold.yaml reaches this file too

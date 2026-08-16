@@ -62,9 +62,12 @@ describe('buildNamespaceConfig', () => {
     expect(config.profiles[0].build.artifacts[0].docker).not.toHaveProperty(
       'target',
     );
+    // port-forwarding is left entirely to skaffold's own native
+    // `--port-forward=services` mode - never generated here
+    expect(config).not.toHaveProperty('portForward');
   });
 
-  it("omits manifests.rawYaml's namespace entry and portForward for the default namespace with no Services", () => {
+  it("omits manifests.rawYaml's namespace entry for the default namespace", () => {
     const demo = { name: 'demo', root: 'apps/demo' };
 
     const config = buildNamespaceConfig(
@@ -76,6 +79,5 @@ describe('buildNamespaceConfig', () => {
     );
 
     expect(config.manifests.rawYaml).toEqual(['../apps/demo/k8s/*.yaml']);
-    expect(config).not.toHaveProperty('portForward');
   });
 });

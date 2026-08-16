@@ -31,12 +31,6 @@ deploy:
     flags:
       global:
         - --context=minikube
-portForward:
-  - resourceType: service
-    resourceName: demo
-    namespace: apps
-    port: 3000
-    localPort: 3000
 profiles:
   - name: production
     build:

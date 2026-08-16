@@ -3,8 +3,8 @@
 The framework-agnostic core behind an Nx monorepo's skaffold sync
 generators. It owns everything about assembling and pruning `skaffold/`
 config that doesn't depend on which framework an app is built with — app
-discovery, namespace assignment/validation, port-forward derivation, the
-`production` profile, and generated-file marker/pruning — and exposes a
+discovery, namespace assignment/validation, the `production` profile, and
+generated-file marker/pruning — and exposes a
 small contract, `FrameworkAdapter`, that framework-specific packages
 implement to plug into it.
 [`@dxs/next-skaffold`](https://www.npmjs.com/package/@dxs/next-skaffold) is
@@ -120,8 +120,7 @@ target one namespace.
   traversal, since the value is used directly as a generated file name.
 - A `k8s/` YAML file that fails to parse at all (invalid YAML) fails
   `nx sync` immediately with a clear error naming the file, rather than
-  silently skipping it or producing broken config downstream. The same
-  parsing pass backs port-forward detection too (see below).
+  silently skipping it or producing broken config downstream.
 
 For every namespace in use, the generator also writes a `Namespace` manifest
 (`skaffold/<namespace>-namespace.yaml`) and applies it in the same batch as
@@ -129,37 +128,22 @@ the app's own manifests, so `deploy.kubectl.defaultNamespace` never points at
 a namespace that doesn't exist yet.
 
 Apps sharing a namespace are grouped into one `skaffold/<namespace>.yaml`
-(one `build.artifacts`/`portForward` entry per app, one shared `Namespace`
-manifest) rather than one file per app — this is what lets `kubectl apply`
-batch things correctly, since a single `kubectl apply -n X` invocation
-requires every object in that batch to either have no namespace or match `X`
-exactly.
+(one `build.artifacts` entry per app, one shared `Namespace` manifest)
+rather than one file per app — this is what lets `kubectl apply` batch
+things correctly, since a single `kubectl apply -n X` invocation requires
+every object in that batch to either have no namespace or match `X` exactly.
 
 ## Port forwarding
 
-A `portForward` entry is generated automatically for every port on every
-`kind: Service` resource found across an app's `k8s/` manifests — one entry
-per port, not just per Service. Everything else (Deployments, ConfigMaps,
-whatever) is ignored for this purpose; only `Service` resources are
-considered.
-
-- The Service's `metadata.name` becomes `resourceName`, and is required —
-  a `Service` without one fails `nx sync` with a clear error, since there'd
-  be nothing to point `kubectl port-forward` at.
-- Each `spec.ports[]` entry needs a numeric `port`; a non-numeric one (or one
-  missing entirely) also fails `nx sync` rather than producing a forward that
-  would fail silently at deploy time.
-- `localPort` always matches the Service's `port` — there's no way to
-  request a different local port. If two apps (in the same or different
-  namespaces) both expose port 3000, that's not a conflict at the config
-  level: skaffold's own port-forwarding increments the local port at runtime
-  if one it wants is already taken, so nothing needs to be done about it here.
-
-Like `build.artifacts`, every app's entries are combined into one shared
-`portForward` array per `skaffold/<namespace>.yaml` — omitted entirely from
-that file if none of its apps declare a `Service`. It's untouched by the
-`production` profile (see below), since only `build.artifacts` differs
-between the two.
+Not generated at all — this package deliberately leaves port-forwarding
+entirely to
+[Skaffold's own `--port-forward=services` mode](https://skaffold.dev/docs/port-forwarding/),
+which auto-forwards every `kind: Service`'s ports with zero config, the same
+thing a hand-written `portForward` stanza would give you. Pass
+`--port-forward=services` (or the bare `--port-forward` flag, which enables
+it alongside `user` mode) to `skaffold dev`/`skaffold run`; without it,
+Skaffold's default is `user` mode only, which forwards nothing unless you
+declare it explicitly.
 
 ## Infrastructure (`infra.yaml`)
 
@@ -194,8 +178,8 @@ Every generated `skaffold/<namespace>.yaml` also carries a `production`
 [profile](https://skaffold.dev/docs/environment/profiles/) that overrides
 just `build.artifacts` for that namespace's apps: no `docker.target` (so the
 Dockerfile's _last_ stage — the real production build — is what gets built)
-and no file sync. Everything else (manifests, namespace, `portForward`) is
-unaffected, since only the build differs between dev and production.
+and no file sync. Everything else (manifests, namespace) is unaffected,
+since only the build differs between dev and production.
 
 It still targets minikube, same as development — there's no registry push
 or remote cluster/context involved, so this proves the production image
@@ -233,6 +217,6 @@ orchestration without depending on any real framework package.
 — it reads the _real_ on-disk project graph and isn't affected by the
 in-memory test `Tree` at all — so fake apps are built by mocking that
 function's return value directly and writing the corresponding fixture files
-into the test `Tree`. Most other modules (namespace validation, port
-forwarding, artifact assembly, pruning, ...) are pure enough to unit-test
-directly against a `Tree`, with no project-graph mocking needed at all.
+into the test `Tree`. Most other modules (namespace validation, artifact
+assembly, pruning, ...) are pure enough to unit-test directly against a
+`Tree`, with no project-graph mocking needed at all.

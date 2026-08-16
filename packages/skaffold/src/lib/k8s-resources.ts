@@ -13,9 +13,7 @@ export function hasYamlFiles(tree: Tree, dir: string): boolean {
 export type K8sResource = {
   file: string;
   resource: {
-    kind?: string;
     metadata?: { name?: string; namespace?: string };
-    spec?: { ports?: { port?: unknown }[] };
   };
 };
 
@@ -55,52 +53,4 @@ export function getResourceNamespaces(tree: Tree, k8sDir: string): string[] {
   return readK8sResources(tree, k8sDir)
     .map(({ resource }) => resource.metadata?.namespace)
     .filter((namespace): namespace is string => Boolean(namespace));
-}
-
-export type PortForward = {
-  resourceType: string;
-  resourceName: string;
-  namespace: string;
-  port: number;
-  localPort: number;
-};
-
-export function getServicePortForwards(
-  tree: Tree,
-  k8sDir: string,
-  namespace: string,
-): PortForward[] {
-  const portForwards: PortForward[] = [];
-
-  for (const { file, resource } of readK8sResources(tree, k8sDir)) {
-    if (resource.kind !== 'Service') {
-      continue;
-    }
-
-    const resourceName = resource.metadata?.name;
-    if (!resourceName) {
-      throw new SyncError(`Service in ${file} is missing metadata.name`, [
-        `Every Service manifest must declare metadata.name so it can be port-forwarded.`,
-      ]);
-    }
-
-    for (const port of resource.spec?.ports ?? []) {
-      if (typeof port.port !== 'number') {
-        throw new SyncError(
-          `Service "${resourceName}" in ${file} has a port entry without a numeric "port"`,
-          [`Found: ${JSON.stringify(port)}`],
-        );
-      }
-
-      portForwards.push({
-        resourceType: 'service',
-        resourceName,
-        namespace,
-        port: port.port,
-        localPort: port.port,
-      });
-    }
-  }
-
-  return portForwards;
 }
