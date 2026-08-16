@@ -1,0 +1,43 @@
+{
+  "name": "@dxs/skaffold",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "@dxs/source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "!**/*.tsbuildinfo"
+  ],
+  "nx": {
+    "name": "skaffold",
+    "sourceRoot": "packages/skaffold/src",
+    "targets": {
+      "build": {
+        "executor": "@nx/js:swc",
+        "outputs": [
+          "{options.outputPath}"
+        ],
+        "options": {
+          "outputPath": "packages/skaffold/dist",
+          "main": "packages/skaffold/src/index.ts",
+          "tsConfig": "packages/skaffold/tsconfig.lib.json",
+          "skipTypeCheck": true,
+          "stripLeadingPaths": true
+        }
+      }
+    }
+  },
+  "dependencies": {
+    "@swc/helpers": "~0.5.18"
+  }
+}
