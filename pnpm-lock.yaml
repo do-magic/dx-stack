@@ -160,7 +160,7 @@ importers:
         specifier: 'catalog:'
         version: 19.2.8(react@19.2.8)
 
-  packages/skaffold-plugin:
+  packages/next-skaffold:
     dependencies:
       '@nx/devkit':
         specifier: 23.1.1

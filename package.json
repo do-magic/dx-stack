@@ -83,7 +83,7 @@
           }
         },
         "syncGenerators": [
-          "@dxs/skaffold:sync"
+          "@dxs/next-skaffold:sync"
         ]
       }
     }

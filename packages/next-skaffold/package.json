@@ -1,5 +1,5 @@
 {
-  "name": "@dxs/skaffold",
+  "name": "@dxs/next-skaffold",
   "version": "0.0.1",
   "type": "commonjs",
   "main": "./dist/index.js",
@@ -20,8 +20,8 @@
     "generators.json"
   ],
   "nx": {
-    "name": "skaffold",
-    "sourceRoot": "packages/skaffold-plugin/src",
+    "name": "next-skaffold",
+    "sourceRoot": "packages/next-skaffold/src",
     "targets": {
       "build": {
         "executor": "@nx/js:swc",
@@ -29,19 +29,19 @@
           "{options.outputPath}"
         ],
         "options": {
-          "outputPath": "packages/skaffold-plugin/dist",
-          "main": "packages/skaffold-plugin/src/index.ts",
-          "tsConfig": "packages/skaffold-plugin/tsconfig.lib.json",
+          "outputPath": "packages/next-skaffold/dist",
+          "main": "packages/next-skaffold/src/index.ts",
+          "tsConfig": "packages/next-skaffold/tsconfig.lib.json",
           "skipTypeCheck": true,
           "stripLeadingPaths": true,
           "assets": [
             {
-              "input": "./packages/skaffold-plugin/src",
+              "input": "./packages/next-skaffold/src",
               "glob": "**/!(*.ts)",
               "output": "."
             },
             {
-              "input": "./packages/skaffold-plugin/src",
+              "input": "./packages/next-skaffold/src",
               "glob": "**/*.d.ts",
               "output": "."
             }

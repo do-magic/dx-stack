@@ -2,9 +2,9 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig(() => ({
   root: __dirname,
-  cacheDir: '../../node_modules/.vite/packages/skaffold-plugin',
+  cacheDir: '../../node_modules/.vite/packages/next-skaffold',
   test: {
-    name: '@dxs/skaffold',
+    name: '@dxs/next-skaffold',
     watch: false,
     globals: true,
     environment: 'jsdom',
