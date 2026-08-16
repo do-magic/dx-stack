@@ -4,9 +4,9 @@ import type {
   FrameworkAdapter,
   WorkspaceApp,
   WorkspaceDependency,
-} from './framework-adapter.ts';
-import { buildArtifact, buildProductionArtifact } from './artifacts.ts';
-import { DEFAULT_NAMESPACE } from './namespace.ts';
+} from './framework-adapter';
+import { buildArtifact, buildProductionArtifact } from './artifacts';
+import { DEFAULT_NAMESPACE } from './namespace';
 
 export function buildNamespaceManifest(namespace: string) {
   if (namespace === DEFAULT_NAMESPACE) {

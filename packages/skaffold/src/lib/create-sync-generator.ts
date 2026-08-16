@@ -7,19 +7,19 @@ import {
   type SkaffoldAdapters,
   type WorkspaceApp,
   type WorkspaceDependency,
-} from './framework-adapter.ts';
-import { discoverApps } from './app-discovery.ts';
-import { DEFAULT_NAMESPACE, getAppNamespace } from './namespace.ts';
-import { getWorkspaceDependencies } from './workspace-dependencies.ts';
+} from './framework-adapter';
+import { discoverApps } from './app-discovery';
+import { DEFAULT_NAMESPACE, getAppNamespace } from './namespace';
+import { getWorkspaceDependencies } from './workspace-dependencies';
 import {
   buildNamespaceConfig,
   buildNamespaceManifest,
-} from './skaffold-config.ts';
+} from './skaffold-config';
 import {
   createWriter,
   pruneStaleDockerfiles,
   pruneStaleSkaffoldFiles,
-} from './generated-files.ts';
+} from './generated-files';
 
 // builds the actual `nx sync` entry point for a given set of framework
 // adapters. `@dxs/skaffold` itself ships no generator — each adapter package

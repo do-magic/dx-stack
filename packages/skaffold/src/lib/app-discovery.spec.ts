@@ -2,8 +2,8 @@ import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 import { Tree } from '@nx/devkit';
 import * as yaml from 'yaml';
 
-import { assertValidImageName, discoverApps } from './app-discovery.ts';
-import { fakeAdapter } from '../testing/fake-adapter.ts';
+import { assertValidImageName, discoverApps } from './app-discovery';
+import { fakeAdapter } from '../testing/fake-adapter';
 
 function addK8s(tree: Tree, root: string) {
   tree.write(

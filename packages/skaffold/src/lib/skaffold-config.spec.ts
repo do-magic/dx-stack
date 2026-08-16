@@ -2,11 +2,11 @@ import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 import { Tree } from '@nx/devkit';
 import * as yaml from 'yaml';
 
-import { fakeAdapter } from '../testing/fake-adapter.ts';
+import { fakeAdapter } from '../testing/fake-adapter';
 import {
   buildNamespaceConfig,
   buildNamespaceManifest,
-} from './skaffold-config.ts';
+} from './skaffold-config';
 
 describe('buildNamespaceManifest', () => {
   it('returns undefined for the default namespace', () => {

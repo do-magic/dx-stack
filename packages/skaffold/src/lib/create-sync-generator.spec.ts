@@ -3,8 +3,8 @@ import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 import { Tree, createProjectGraphAsync } from '@nx/devkit';
 import * as yaml from 'yaml';
 
-import { createSkaffoldSyncGenerator } from './create-sync-generator.ts';
-import { fakeAdapter } from '../testing/fake-adapter.ts';
+import { createSkaffoldSyncGenerator } from './create-sync-generator';
+import { fakeAdapter } from '../testing/fake-adapter';
 
 // createProjectGraphAsync reads the real, on-disk project graph and is not
 // influenced by the in-memory test Tree at all (addProjectConfiguration has no

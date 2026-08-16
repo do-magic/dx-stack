@@ -1,7 +1,7 @@
 import {
   GENERATED_FILE_MARKER,
   type FrameworkAdapter,
-} from '../lib/framework-adapter.ts';
+} from '../lib/framework-adapter';
 
 // a minimal, always-activating FrameworkAdapter for testing the
 // framework-agnostic orchestration in isolation, without depending on any

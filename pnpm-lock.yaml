@@ -189,11 +189,8 @@ importers:
         specifier: workspace:*
         version: link:../skaffold
       '@nx/devkit':
-        specifier: ^23.0.0
+        specifier: 23.1.1
         version: 23.1.1(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.47(@swc/helpers@0.5.23))(@swc/types@0.1.28)(supports-color@8.1.1)(typescript@6.0.3))(@swc/core@1.15.47(@swc/helpers@0.5.23)))
-      '@swc/helpers':
-        specifier: ~0.5.18
-        version: 0.5.23
       '@types/ejs':
         specifier: ^3.1.5
         version: 3.1.5
@@ -203,6 +200,9 @@ importers:
       nx:
         specifier: ^23.0.0
         version: 23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.47(@swc/helpers@0.5.23))(@swc/types@0.1.28)(supports-color@8.1.1)(typescript@6.0.3))(@swc/core@1.15.47(@swc/helpers@0.5.23))
+      tslib:
+        specifier: ^2.3.0
+        version: 2.8.1
       typescript:
         specifier: 'catalog:'
         version: 6.0.3
@@ -216,12 +216,12 @@ importers:
       '@nx/devkit':
         specifier: ^23.0.0
         version: 23.1.1(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.47(@swc/helpers@0.5.23))(@swc/types@0.1.28)(supports-color@8.1.1)(typescript@6.0.3))(@swc/core@1.15.47(@swc/helpers@0.5.23)))
-      '@swc/helpers':
-        specifier: ~0.5.18
-        version: 0.5.23
       nx:
         specifier: ^23.0.0
         version: 23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.47(@swc/helpers@0.5.23))(@swc/types@0.1.28)(supports-color@8.1.1)(typescript@6.0.3))(@swc/core@1.15.47(@swc/helpers@0.5.23))
+      tslib:
+        specifier: ^2.3.0
+        version: 2.8.1
       yaml:
         specifier: ^2.9.0
         version: 2.9.0

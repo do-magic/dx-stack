@@ -1,6 +1,6 @@
 import type { ProjectGraph } from '@nx/devkit';
 
-import { getWorkspaceDependencies } from './workspace-dependencies.ts';
+import { getWorkspaceDependencies } from './workspace-dependencies';
 
 function graph(
   nodes: { name: string; root: string }[],

@@ -1,6 +1,6 @@
 import { Tree } from '@nx/devkit';
 import { SyncError } from 'nx/src/utils/sync-generators';
-import { getResourceNamespaces } from './k8s-resources.ts';
+import { getResourceNamespaces } from './k8s-resources';
 
 export const DEFAULT_NAMESPACE = 'default';
 

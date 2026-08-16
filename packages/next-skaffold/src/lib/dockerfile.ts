@@ -3,9 +3,15 @@ import {
   type WorkspaceApp,
   type WorkspaceDependency,
 } from '@dxs/skaffold';
-import { render } from 'ejs';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
+
+// explicit CJS-require form rather than `import ejs from 'ejs'`: this file's
+// dependents (Nx's own generator source-loading) run it through whichever
+// transpiler is on hand (native TS stripping, swc-node), which don't all
+// apply the same default-import interop tsc does when compiling to dist -
+// `require()` semantics are unambiguous regardless of which one processes it.
+import ejs = require('ejs');
 
 // WORKDIR for the generated Dockerfile, so the container mirrors the local
 // monorepo layout beneath it (e.g. /workspace/apps/demo/...) rather than
@@ -32,7 +38,7 @@ export function buildNextJsDockerfile(
   const roots = [app.root, ...dependencies.map((dep) => dep.root)].sort();
 
   const template = readFileSync(TEMPLATE_PATH, 'utf-8');
-  return render(template, {
+  return ejs.render(template, {
     generatedFileMarker: GENERATED_FILE_MARKER,
     workspaceDir: WORKSPACE_DIR,
     appName: app.name,

@@ -1,7 +1,7 @@
 import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 import { Tree } from '@nx/devkit';
 
-import { syncNextConfig } from './next-config.ts';
+import { syncNextConfig } from './next-config';
 
 const demo = { name: 'demo', root: 'apps/demo' };
 

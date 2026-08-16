@@ -2,7 +2,7 @@ import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 import { Tree } from '@nx/devkit';
 import * as yaml from 'yaml';
 
-import { getAppNamespace } from './namespace.ts';
+import { getAppNamespace } from './namespace';
 
 function deployment(name: string, namespace?: string) {
   return yaml.stringify({

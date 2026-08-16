@@ -3,7 +3,7 @@ import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 import { Tree, createProjectGraphAsync } from '@nx/devkit';
 import * as yaml from 'yaml';
 
-import { syncGenerator } from './sync.ts';
+import { syncGenerator } from './sync';
 
 // createProjectGraphAsync reads the real, on-disk project graph and is not
 // influenced by the in-memory test Tree at all (addProjectConfiguration has

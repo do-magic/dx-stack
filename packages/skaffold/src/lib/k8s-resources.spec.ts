@@ -2,7 +2,7 @@ import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 import { Tree } from '@nx/devkit';
 import * as yaml from 'yaml';
 
-import { readK8sResources } from './k8s-resources.ts';
+import { readK8sResources } from './k8s-resources';
 
 function deployment(name: string, namespace?: string) {
   return yaml.stringify({

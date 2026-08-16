@@ -1,5 +1,5 @@
 import { Tree, joinPathFragments } from '@nx/devkit';
-import type { WorkspaceApp } from './framework-adapter.ts';
+import type { WorkspaceApp } from './framework-adapter';
 
 // stage name skaffold's dev-loop build targets. An adapter-built Dockerfile
 // always has one by construction (a hard requirement of the FrameworkAdapter

@@ -24,10 +24,9 @@
   ],
   "nx": {
     "name": "next-skaffold",
-    "sourceRoot": "packages/next-skaffold/src",
     "targets": {
       "build": {
-        "executor": "@nx/js:swc",
+        "executor": "@nx/js:tsc",
         "outputs": [
           "{options.outputPath}"
         ],
@@ -35,8 +34,8 @@
           "outputPath": "packages/next-skaffold/dist",
           "main": "packages/next-skaffold/src/index.ts",
           "tsConfig": "packages/next-skaffold/tsconfig.lib.json",
-          "skipTypeCheck": true,
-          "stripLeadingPaths": true,
+          "rootDir": "packages/next-skaffold/src",
+          "generatePackageJson": false,
           "assets": [
             {
               "input": "./packages/next-skaffold/src",
@@ -54,14 +53,14 @@
     }
   },
   "dependencies": {
+    "@nx/devkit": "23.1.1",
+    "tslib": "^2.3.0",
     "@dxs/skaffold": "workspace:*",
-    "@swc/helpers": "~0.5.18",
     "@types/ejs": "^3.1.5",
     "ejs": "^6.0.1",
     "typescript": "catalog:"
   },
   "peerDependencies": {
-    "@nx/devkit": "^23.0.0",
     "nx": "^23.0.0"
   },
   "devDependencies": {

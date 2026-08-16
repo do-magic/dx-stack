@@ -1,7 +1,7 @@
 import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 import { Tree } from '@nx/devkit';
 
-import { nextJsAdapter } from './next-adapter.ts';
+import { nextJsAdapter } from './next-adapter';
 
 const demo = { name: 'demo', root: 'apps/demo' };
 

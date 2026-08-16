@@ -1,12 +1,12 @@
 import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 import { Tree } from '@nx/devkit';
 
-import { GENERATED_FILE_MARKER } from './framework-adapter.ts';
+import { GENERATED_FILE_MARKER } from './framework-adapter';
 import {
   createWriter,
   pruneStaleDockerfiles,
   pruneStaleSkaffoldFiles,
-} from './generated-files.ts';
+} from './generated-files';
 
 describe('createWriter', () => {
   it('writes the given content to the tree', () => {

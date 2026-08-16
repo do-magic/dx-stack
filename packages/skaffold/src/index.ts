@@ -5,6 +5,6 @@ export type {
   WorkspaceApp,
   WorkspaceDependency,
   WorkspaceProject,
-} from './lib/framework-adapter.ts';
-export { GENERATED_FILE_MARKER } from './lib/framework-adapter.ts';
-export { createSkaffoldSyncGenerator } from './lib/create-sync-generator.ts';
+} from './lib/framework-adapter';
+export { GENERATED_FILE_MARKER } from './lib/framework-adapter';
+export { createSkaffoldSyncGenerator } from './lib/create-sync-generator';

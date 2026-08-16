@@ -1,7 +1,7 @@
 import { Tree, joinPathFragments } from '@nx/devkit';
 import type { FrameworkAdapter, WorkspaceApp } from '@dxs/skaffold';
-import { buildNextJsDockerfile } from './dockerfile.ts';
-import { syncNextConfig } from './next-config.ts';
+import { buildNextJsDockerfile } from './dockerfile';
+import { syncNextConfig } from './next-config';
 
 // dependency (in the app's own package.json) that identifies a Next.js app.
 // Deliberately based on the app's own declared dependencies rather than Nx's

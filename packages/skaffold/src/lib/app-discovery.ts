@@ -4,8 +4,8 @@ import type {
   FrameworkAdapter,
   SkaffoldAdapters,
   WorkspaceApp,
-} from './framework-adapter.ts';
-import { hasYamlFiles } from './k8s-resources.ts';
+} from './framework-adapter';
+import { hasYamlFiles } from './k8s-resources';
 
 // the project name is used as-is as the Docker image name
 const IMAGE_NAME_PATTERN = /^[a-z0-9]+((\.|_|__|-+)[a-z0-9]+)*$/;

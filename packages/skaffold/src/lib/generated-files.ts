@@ -3,8 +3,8 @@ import { SyncError } from 'nx/src/utils/sync-generators';
 import {
   GENERATED_FILE_MARKER,
   type WorkspaceApp,
-} from './framework-adapter.ts';
-import { isYamlFile } from './k8s-resources.ts';
+} from './framework-adapter';
+import { isYamlFile } from './k8s-resources';
 
 // guards against two different namespaces producing the same generated file
 // name — a defensive check, not reachable given how namespaces are

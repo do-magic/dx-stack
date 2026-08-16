@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "license": "MIT",
   "author": "Sebastian Velten <velten.seb@web.de>",
-  "type": "module",
+  "type": "commonjs",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -22,26 +22,10 @@
     "LICENSE"
   ],
   "nx": {
-    "name": "skaffold",
-    "sourceRoot": "packages/skaffold/src",
-    "targets": {
-      "build": {
-        "executor": "@nx/js:swc",
-        "outputs": [
-          "{options.outputPath}"
-        ],
-        "options": {
-          "outputPath": "packages/skaffold/dist",
-          "main": "packages/skaffold/src/index.ts",
-          "tsConfig": "packages/skaffold/tsconfig.lib.json",
-          "skipTypeCheck": true,
-          "stripLeadingPaths": true
-        }
-      }
-    }
+    "name": "skaffold"
   },
   "dependencies": {
-    "@swc/helpers": "~0.5.18",
+    "tslib": "^2.3.0",
     "yaml": "^2.9.0"
   },
   "peerDependencies": {

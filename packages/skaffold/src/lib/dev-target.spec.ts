@@ -1,7 +1,7 @@
 import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 import { Tree } from '@nx/devkit';
 
-import { getDevTarget } from './dev-target.ts';
+import { getDevTarget } from './dev-target';
 
 describe('getDevTarget', () => {
   let tree: Tree;

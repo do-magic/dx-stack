@@ -1,4 +1,4 @@
-import { buildNextJsDockerfile } from './dockerfile.ts';
+import { buildNextJsDockerfile } from './dockerfile';
 
 describe('buildNextJsDockerfile', () => {
   it('generates a Dockerfile with the expected stages', () => {

@@ -1,5 +1,5 @@
 import type { ProjectGraph } from '@nx/devkit';
-import type { WorkspaceDependency } from './framework-adapter.ts';
+import type { WorkspaceDependency } from './framework-adapter';
 
 // transitive closure of an app's workspace-internal dependencies, both
 // explicit (detected imports, TS project references) and implicit

@@ -1,8 +1,8 @@
 import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 import { Tree } from '@nx/devkit';
 
-import { buildArtifact, buildProductionArtifact } from './artifacts.ts';
-import { fakeAdapter } from '../testing/fake-adapter.ts';
+import { buildArtifact, buildProductionArtifact } from './artifacts';
+import { fakeAdapter } from '../testing/fake-adapter';
 
 describe('buildArtifact', () => {
   let tree: Tree;

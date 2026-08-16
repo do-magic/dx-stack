@@ -3,8 +3,8 @@ import type {
   FrameworkAdapter,
   WorkspaceApp,
   WorkspaceDependency,
-} from './framework-adapter.ts';
-import { getDevTarget } from './dev-target.ts';
+} from './framework-adapter';
+import { getDevTarget } from './dev-target';
 
 export function buildArtifact(
   tree: Tree,
