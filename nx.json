@@ -65,7 +65,12 @@
   "release": {
     "projects": ["skaffold", "*-skaffold"],
     "version": {
-      "preVersionCommand": "npx nx run-many -t build"
+      "preVersionCommand": "pnpm nx run-many -t build",
+      "currentVersionResolver": "git-tag"
+    },
+    "changelog": {
+      "workspaceChangelog": false,
+      "projectChangelogs": false
     }
   },
   "targetDefaults": {

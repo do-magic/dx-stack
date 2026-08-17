@@ -199,7 +199,7 @@ importers:
         specifier: ^2.3.0
         version: 2.8.1
       typescript:
-        specifier: 'catalog:'
+        specifier: ~6.0.3
         version: 6.0.3
     devDependencies:
       yaml:

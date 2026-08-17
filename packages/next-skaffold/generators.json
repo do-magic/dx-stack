@@ -1,8 +1,8 @@
 {
   "generators": {
     "sync": {
-      "factory": "./dist/generators/sync/sync",
-      "schema": "./dist/generators/sync/schema.json",
+      "factory": "./dist/src/generators/sync/sync",
+      "schema": "./dist/src/generators/sync/schema.json",
       "description": "sync generator"
     }
   }
