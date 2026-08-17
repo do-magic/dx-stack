@@ -1,8 +1,31 @@
 {
   "name": "@dxs/next-skaffold",
   "version": "0.0.1",
+  "description": "Next.js adapter for @dxs/skaffold - generates Dockerfiles, Skaffold config, and next.config.js for one-command Kubernetes deployment",
   "license": "MIT",
   "author": "Sebastian Velten <velten.seb@web.de>",
+  "homepage": "https://github.com/do-magic/dx-stack/tree/main/packages/next-skaffold#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/do-magic/dx-stack.git",
+    "directory": "packages/next-skaffold"
+  },
+  "bugs": {
+    "url": "https://github.com/do-magic/dx-stack/issues"
+  },
+  "keywords": [
+    "nx",
+    "nx-plugin",
+    "nextjs",
+    "kubernetes",
+    "skaffold",
+    "docker",
+    "devops",
+    "deployment"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "commonjs",
   "main": "./dist/index.js",
   "module": "./dist/index.js",

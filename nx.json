@@ -63,7 +63,7 @@
     }
   ],
   "release": {
-    "projects": ["*", "!@dxs/source"],
+    "projects": ["skaffold", "*-skaffold"],
     "version": {
       "preVersionCommand": "npx nx run-many -t build"
     }

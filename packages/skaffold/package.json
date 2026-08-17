@@ -1,8 +1,29 @@
 {
   "name": "@dxs/skaffold",
   "version": "0.0.1",
+  "description": "Framework-agnostic core for automated Kubernetes/Skaffold deployment via Nx sync generators",
   "license": "MIT",
   "author": "Sebastian Velten <velten.seb@web.de>",
+  "homepage": "https://github.com/do-magic/dx-stack/tree/main/packages/skaffold#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/do-magic/dx-stack.git",
+    "directory": "packages/skaffold"
+  },
+  "bugs": {
+    "url": "https://github.com/do-magic/dx-stack/issues"
+  },
+  "keywords": [
+    "nx",
+    "nx-plugin",
+    "kubernetes",
+    "skaffold",
+    "devops",
+    "deployment"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "commonjs",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
