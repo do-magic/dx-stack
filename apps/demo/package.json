@@ -1,12 +1,12 @@
 {
-  "name": "@dxs/demo",
+  "name": "@dx-stack/demo",
   "version": "0.0.1",
   "private": true,
   "nx": {
     "name": "demo"
   },
   "dependencies": {
-    "@dxs/demo-lib": "workspace:*",
+    "@dx-stack/demo-lib": "workspace:*",
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:"

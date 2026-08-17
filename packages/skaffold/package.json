@@ -1,5 +1,5 @@
 {
-  "name": "@dxs/skaffold",
+  "name": "@dx-stack/skaffold",
   "version": "0.0.1",
   "description": "Framework-agnostic core for automated Kubernetes/Skaffold deployment via Nx sync generators",
   "license": "MIT",
@@ -31,7 +31,7 @@
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "@dxs/source": "./src/index.ts",
+      "@dx-stack/source": "./src/index.ts",
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"

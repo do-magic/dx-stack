@@ -1,11 +1,11 @@
-# dxs — Developer Experience Stack
+# dx-stack — Developer Experience Stack
 
 Nx plugins that turn deploying an application to Kubernetes into a single
-command. `dxs` stands for **developer experience stack**: the goal is a
-highly automated deployment pipeline where the only thing you write by hand
-is the Kubernetes resources themselves — Dockerfile generation, image
-builds, and [Skaffold](https://skaffold.dev/) configuration are all derived
-automatically from the workspace's own project graph.
+command. The goal is a highly automated deployment pipeline where the only
+thing you write by hand is the Kubernetes resources themselves — Dockerfile
+generation, image builds, and [Skaffold](https://skaffold.dev/)
+configuration are all derived automatically from the workspace's own
+project graph.
 
 Today that means a local [minikube](https://minikube.sigs.k8s.io/) cluster
 only — no remote cluster, registry push, or CI deployment pipeline yet.
@@ -31,15 +31,15 @@ app it doesn't understand.
 
 ## Packages
 
-| Package                                        | What it is                                                                                                                                                                                                                                         |
-| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`@dxs/skaffold`](packages/skaffold)           | Framework-agnostic core: app discovery, namespace handling, the production profile, generated-file pruning, and the `FrameworkAdapter` contract that framework packages implement. Ships no generator of its own — not useful installed by itself. |
-| [`@dxs/next-skaffold`](packages/next-skaffold) | The only framework adapter so far, for Next.js apps (Dockerfile template, `next.config.js` maintenance, framework detection). Install this one if you just want the feature.                                                                       |
+| Package                                             | What it is                                                                                                                                                                                                                                         |
+| --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`@dx-stack/skaffold`](packages/skaffold)           | Framework-agnostic core: app discovery, namespace handling, the production profile, generated-file pruning, and the `FrameworkAdapter` contract that framework packages implement. Ships no generator of its own — not useful installed by itself. |
+| [`@dx-stack/next-skaffold`](packages/next-skaffold) | The only framework adapter so far, for Next.js apps (Dockerfile template, `next.config.js` maintenance, framework detection). Install this one if you just want the feature.                                                                       |
 
 More framework adapters (Angular and others) are the intended growth path —
-`@dxs/skaffold`'s contract exists so a new one is a self-contained package,
+`@dx-stack/skaffold`'s contract exists so a new one is a self-contained package,
 not a change to the core. Each package's own README documents its
-behavior and conventions in depth; `@dxs/skaffold`'s also documents the
+behavior and conventions in depth; `@dx-stack/skaffold`'s also documents the
 `FrameworkAdapter` contract for anyone building a new adapter.
 
 ## Demo workspace
@@ -95,7 +95,7 @@ pnpm nx graph                                                           # visual
 
 ## Publishing
 
-Packages are released under the `@dxs` npm scope via
+Packages are released under the `@dx-stack` npm scope via
 [Nx Release](https://nx.dev/docs/features/manage-releases), following
 [Nx's recommended CI/CD pattern](https://nx.dev/docs/guides/nx-release/publish-in-ci-cd):
 versioning happens locally, publishing happens in CI, triggered by pushing
@@ -110,6 +110,6 @@ To test a publish without touching the real npm registry, use the local
 Verdaccio registry instead:
 
 ```bash
-pnpm nx local-registry   # start a local registry for the @dxs scope
+pnpm nx local-registry   # start a local registry for the @dx-stack scope
 pnpm nx local-publish    # nx release publish against that local registry
 ```

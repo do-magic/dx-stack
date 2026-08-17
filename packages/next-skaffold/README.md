@@ -1,11 +1,11 @@
-# @dxs/next-skaffold
+# @dx-stack/next-skaffold
 
 The Next.js implementation of
-[`@dxs/skaffold`](https://www.npmjs.com/package/@dxs/skaffold)'s
+[`@dx-stack/skaffold`](https://www.npmjs.com/package/@dx-stack/skaffold)'s
 `FrameworkAdapter` contract (`nextJsAdapter`, `src/lib/next-adapter.ts`).
 Everything framework-agnostic — app discovery, namespace assignment, port
 forwarding, the `production` profile, generated-file pruning — lives in
-`@dxs/skaffold` and is documented there. This package only covers what's
+`@dx-stack/skaffold` and is documented there. This package only covers what's
 specific to Next.js: `activates` (detecting a Next.js app), the generated
 Dockerfile, the dependency sync paths it needs, and `next.config.js`
 maintenance.
@@ -13,7 +13,7 @@ maintenance.
 ## Installation
 
 ```sh
-npm install @dxs/next-skaffold
+npm install @dx-stack/next-skaffold
 ```
 
 Then add it to your `syncGenerators`, e.g. on whichever Nx target you use to
@@ -25,7 +25,7 @@ too):
   "targets": {
     "skaffold": {
       // ... your own executor/commands to run skaffold itself
-      "syncGenerators": ["@dxs/next-skaffold:sync"],
+      "syncGenerators": ["@dx-stack/next-skaffold:sync"],
     },
   },
 }
@@ -56,7 +56,7 @@ fixed multi-stage build — `base` → `deps` (install, scoped to the app and it
 workspace dependencies) → `source` (copies source) → `builder`
 (`nx build <app> --skip-sync`) and, as siblings both built from `source`,
 `dev` (`nx dev <app> --skip-sync`, watching for changes — the stage name
-`@dxs/skaffold`'s core requires every adapter's Dockerfile to have) and
+`@dx-stack/skaffold`'s core requires every adapter's Dockerfile to have) and
 `runner` (the `.next/standalone` production output).
 
 The `runner` stage sets `ENV HOSTNAME="0.0.0.0"` unconditionally — Next.js's
@@ -164,5 +164,5 @@ them touch the Nx project graph, so no mocking beyond
 `createTreeWithEmptyWorkspace()` is needed. `src/generators/sync/sync.spec.ts`
 has a small number of true end-to-end tests wiring the real
 `createSkaffoldSyncGenerator([nextJsAdapter])`, confirming the adapter and
-`@dxs/skaffold`'s core actually compose correctly — see `@dxs/skaffold`'s own
+`@dx-stack/skaffold`'s core actually compose correctly — see `@dx-stack/skaffold`'s own
 README for how its tests cover the framework-agnostic behavior in isolation.

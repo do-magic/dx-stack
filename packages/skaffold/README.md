@@ -1,4 +1,4 @@
-# @dxs/skaffold
+# @dx-stack/skaffold
 
 The framework-agnostic core behind an Nx monorepo's skaffold sync
 generators. It owns everything about assembling and pruning `skaffold/`
@@ -7,16 +7,16 @@ discovery, namespace assignment/validation, the `production` profile, and
 generated-file marker/pruning — and exposes a
 small contract, `FrameworkAdapter`, that framework-specific packages
 implement to plug into it.
-[`@dxs/next-skaffold`](https://www.npmjs.com/package/@dxs/next-skaffold) is
+[`@dx-stack/next-skaffold`](https://www.npmjs.com/package/@dx-stack/next-skaffold) is
 the first (and so far only) implementation, for Next.js apps; a hypothetical
-future `@dxs/angular-skaffold` would implement the same contract for Angular
+future `@dx-stack/angular-skaffold` would implement the same contract for Angular
 apps.
 
 **This package alone does nothing for you** — it ships no Nx generator of
 its own, only the `createSkaffoldSyncGenerator` factory that a
-framework-specific package (like `@dxs/next-skaffold`) calls and exports as
+framework-specific package (like `@dx-stack/next-skaffold`) calls and exports as
 its own `sync` generator. If you just want to get skaffold configs generated
-for a Next.js monorepo, install `@dxs/next-skaffold` instead — you'll only
+for a Next.js monorepo, install `@dx-stack/next-skaffold` instead — you'll only
 need this package directly if you're writing a new framework adapter (see
 the contract below).
 
@@ -26,7 +26,7 @@ This package is meant to be consumed by a framework adapter package, not
 installed directly in most cases. If you're implementing a new adapter:
 
 ```sh
-npm install @dxs/skaffold
+npm install @dx-stack/skaffold
 ```
 
 It requires `nx` and `@nx/devkit` (peer dependencies) already present in

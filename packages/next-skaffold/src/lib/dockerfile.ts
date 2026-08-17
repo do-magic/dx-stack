@@ -2,7 +2,7 @@ import {
   GENERATED_FILE_MARKER,
   type WorkspaceApp,
   type WorkspaceDependency,
-} from '@dxs/skaffold';
+} from '@dx-stack/skaffold';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 

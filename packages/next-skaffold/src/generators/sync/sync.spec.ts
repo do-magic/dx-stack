@@ -8,7 +8,7 @@ import { syncGenerator } from './sync';
 // createProjectGraphAsync reads the real, on-disk project graph and is not
 // influenced by the in-memory test Tree at all (addProjectConfiguration has
 // no effect on it), so it must be mocked to test against fake apps in
-// isolation. See @dxs/skaffold's own create-sync-generator.spec.ts for the
+// isolation. See @dx-stack/skaffold's own create-sync-generator.spec.ts for the
 // framework-agnostic behavior this composes with (namespaces, port
 // forwarding, pruning, ...) — these tests only cover that the Next.js
 // adapter and the core generator actually wire together correctly.

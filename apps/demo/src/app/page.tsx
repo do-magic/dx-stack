@@ -1,4 +1,4 @@
-import { DemoLib } from '@dxs/demo-lib';
+import { DemoLib } from '@dx-stack/demo-lib';
 import styles from './page.module.scss';
 
 export default function Index() {

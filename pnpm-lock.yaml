@@ -155,7 +155,7 @@ importers:
 
   apps/demo:
     dependencies:
-      '@dxs/demo-lib':
+      '@dx-stack/demo-lib':
         specifier: workspace:*
         version: link:../../packages/demo-lib
       next:
@@ -180,7 +180,7 @@ importers:
 
   packages/next-skaffold:
     dependencies:
-      '@dxs/skaffold':
+      '@dx-stack/skaffold':
         specifier: workspace:*
         version: link:../skaffold
       '@nx/devkit':

@@ -1,5 +1,5 @@
 {
-  "name": "@dxs/source",
+  "name": "@dx-stack/source",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {},
@@ -59,7 +59,7 @@
           "config": ".verdaccio/config.yml",
           "storage": "tmp/local-registry/storage",
           "scopes": [
-            "@dxs"
+            "@dx-stack"
           ]
         }
       },
@@ -104,7 +104,7 @@
           }
         },
         "syncGenerators": [
-          "@dxs/next-skaffold:sync"
+          "@dx-stack/next-skaffold:sync"
         ]
       }
     }

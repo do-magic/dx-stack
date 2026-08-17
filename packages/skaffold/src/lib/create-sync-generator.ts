@@ -22,8 +22,8 @@ import {
 } from './generated-files';
 
 // builds the actual `nx sync` entry point for a given set of framework
-// adapters. `@dxs/skaffold` itself ships no generator — each adapter package
-// (e.g. `@dxs/next-skaffold`) calls this once with its own adapter(s) and
+// adapters. `@dx-stack/skaffold` itself ships no generator — each adapter package
+// (e.g. `@dx-stack/next-skaffold`) calls this once with its own adapter(s) and
 // exports the result as its own `sync` generator.
 export function createSkaffoldSyncGenerator(
   adapters: SkaffoldAdapters,

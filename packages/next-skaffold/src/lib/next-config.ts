@@ -1,6 +1,6 @@
 import { Tree, joinPathFragments, workspaceRoot } from '@nx/devkit';
 import { SyncError } from 'nx/src/utils/sync-generators';
-import type { WorkspaceApp } from '@dxs/skaffold';
+import type { WorkspaceApp } from '@dx-stack/skaffold';
 import { join, relative, sep } from 'path';
 import * as ts from 'typescript';
 

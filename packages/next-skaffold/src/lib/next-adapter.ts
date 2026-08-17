@@ -1,5 +1,5 @@
 import { Tree, joinPathFragments } from '@nx/devkit';
-import type { FrameworkAdapter, WorkspaceApp } from '@dxs/skaffold';
+import type { FrameworkAdapter, WorkspaceApp } from '@dx-stack/skaffold';
 import { buildNextJsDockerfile } from './dockerfile';
 import { syncNextConfig } from './next-config';
 
