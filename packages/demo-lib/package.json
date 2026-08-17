@@ -14,5 +14,11 @@
   },
   "nx": {
     "name": "demo-lib"
+  },
+  "peerDependencies": {
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "next": "catalog:"
   }
 }

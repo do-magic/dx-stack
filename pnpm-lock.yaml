@@ -22,19 +22,6 @@ catalogs:
 importers:
 
   .:
-    dependencies:
-      '@nx/devkit':
-        specifier: 23.1.1
-        version: 23.1.1(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.47(@swc/helpers@0.5.23))(@swc/types@0.1.28)(supports-color@7.2.0)(typescript@6.0.3))(@swc/core@1.15.47(@swc/helpers@0.5.23)))
-      next:
-        specifier: ~16.1.6
-        version: 16.1.7(@babel/core@7.29.7(supports-color@7.2.0))(babel-plugin-macros@3.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.97.2)
-      react:
-        specifier: ^19.0.0
-        version: 19.2.8
-      react-dom:
-        specifier: ^19.0.0
-        version: 19.2.8(react@19.2.8)
     devDependencies:
       '@babel/core':
         specifier: ^7.14.5
@@ -181,7 +168,15 @@ importers:
         specifier: 'catalog:'
         version: 19.2.8(react@19.2.8)
 
-  packages/demo-lib: {}
+  packages/demo-lib:
+    dependencies:
+      react:
+        specifier: 'catalog:'
+        version: 19.2.8
+    devDependencies:
+      next:
+        specifier: 'catalog:'
+        version: 16.1.7(@babel/core@7.29.7(supports-color@8.1.1))(babel-plugin-macros@3.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.97.2)
 
   packages/next-skaffold:
     dependencies:
