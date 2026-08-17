@@ -31,10 +31,10 @@ app it doesn't understand.
 
 ## Packages
 
-| Package | What it is |
-| --- | --- |
-| [`@dxs/skaffold`](packages/skaffold) | Framework-agnostic core: app discovery, namespace handling, the production profile, generated-file pruning, and the `FrameworkAdapter` contract that framework packages implement. Ships no generator of its own — not useful installed by itself. |
-| [`@dxs/next-skaffold`](packages/next-skaffold) | The only framework adapter so far, for Next.js apps (Dockerfile template, `next.config.js` maintenance, framework detection). Install this one if you just want the feature. |
+| Package                                        | What it is                                                                                                                                                                                                                                         |
+| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`@dxs/skaffold`](packages/skaffold)           | Framework-agnostic core: app discovery, namespace handling, the production profile, generated-file pruning, and the `FrameworkAdapter` contract that framework packages implement. Ships no generator of its own — not useful installed by itself. |
+| [`@dxs/next-skaffold`](packages/next-skaffold) | The only framework adapter so far, for Next.js apps (Dockerfile template, `next.config.js` maintenance, framework detection). Install this one if you just want the feature.                                                                       |
 
 More framework adapters (Angular and others) are the intended growth path —
 `@dxs/skaffold`'s contract exists so a new one is a self-contained package,
@@ -96,10 +96,20 @@ pnpm nx graph                                                           # visual
 ## Publishing
 
 Packages are released under the `@dxs` npm scope via
-[Nx Release](https://nx.dev/docs/features/manage-releases):
+[Nx Release](https://nx.dev/docs/features/manage-releases), following
+[Nx's recommended CI/CD pattern](https://nx.dev/docs/guides/nx-release/publish-in-ci-cd):
+versioning happens locally, publishing happens in CI, triggered by pushing
+the version tag `nx release` creates.
 
 ```bash
-pnpm nx local-registry   # start a local Verdaccio registry for the @dxs scope
+pnpm nx release-commit          # nx release --skip-publish: version + changelog + tag, no publish
+git push && git push --tags     # pushing the tag triggers .github/workflows/publish.yml
+```
+
+To test a publish without touching the real npm registry, use the local
+Verdaccio registry instead:
+
+```bash
+pnpm nx local-registry   # start a local registry for the @dxs scope
 pnpm nx local-publish    # nx release publish against that local registry
-pnpm nx release-commit   # nx release --skip-publish (version + changelog only)
 ```

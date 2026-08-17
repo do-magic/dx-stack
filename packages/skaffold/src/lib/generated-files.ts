@@ -1,9 +1,6 @@
 import { Tree, joinPathFragments } from '@nx/devkit';
 import { SyncError } from 'nx/src/utils/sync-generators';
-import {
-  GENERATED_FILE_MARKER,
-  type WorkspaceApp,
-} from './framework-adapter';
+import { GENERATED_FILE_MARKER, type WorkspaceApp } from './framework-adapter';
 import { isYamlFile } from './k8s-resources';
 
 // guards against two different namespaces producing the same generated file
