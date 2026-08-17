@@ -1,6 +1,6 @@
 {
   "name": "@dx-stack/skaffold",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Framework-agnostic core for automated Kubernetes/Skaffold deployment via Nx sync generators",
   "license": "MIT",
   "author": "Sebastian Velten <velten.seb@web.de>",

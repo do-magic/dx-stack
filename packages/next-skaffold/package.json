@@ -1,6 +1,6 @@
 {
   "name": "@dx-stack/next-skaffold",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Next.js adapter for @dx-stack/skaffold - generates Dockerfiles, Skaffold config, and next.config.js for one-command Kubernetes deployment",
   "license": "MIT",
   "author": "Sebastian Velten <velten.seb@web.de>",
