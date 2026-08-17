@@ -1,207 +1,105 @@
-# Nx TypeScript Repository
+# dxs — Developer Experience Stack
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+Nx plugins that turn deploying an application to Kubernetes into a single
+command. `dxs` stands for **developer experience stack**: the goal is a
+highly automated deployment pipeline where the only thing you write by hand
+is the Kubernetes resources themselves — Dockerfile generation, image
+builds, and [Skaffold](https://skaffold.dev/) configuration are all derived
+automatically from the workspace's own project graph.
 
-✨ A repository showcasing key [Nx](https://nx.dev) features for TypeScript monorepos ✨
-🚀 If you haven't connected to Nx Cloud yet, [complete your setup here](https://cloud.nx.app/get-started). Get faster builds with remote caching, distributed task execution, and self-healing CI. [See how your workspace can benefit](#nx-cloud).
+Today that means a local [minikube](https://minikube.sigs.k8s.io/) cluster
+only — no remote cluster, registry push, or CI deployment pipeline yet.
 
-## 📦 Project Overview
+## How it works
 
-This repository demonstrates a production-ready TypeScript monorepo with:
+Wire a framework adapter's `sync` generator into an Nx target (or Nx's
+global `syncGenerators`) and run `nx sync`. For every app in the workspace
+that has a `k8s/` folder with at least one manifest, it will:
 
-- **3 Publishable Packages** - Ready for NPM publishing
+- generate that app's `Dockerfile` (multi-stage: a `dev` stage with live
+  file sync, and a production build)
+- assign it to a Kubernetes namespace, by convention or by explicit
+  `metadata.namespace` on its own manifests
+- assemble and prune the right `skaffold/*.yaml` config for that namespace,
+  with matching dev and production profiles
+- maintain any framework-specific config the build depends on (for Next.js,
+  `output`/`outputFileTracingRoot` in `next.config.js`)
 
-  - `@org/strings` - String manipulation utilities
-  - `@org/async` - Async utility functions with retry logic
-  - `@org/colors` - Color conversion and manipulation utilities
+An app with no recognized framework is left alone as long as it already has
+a hand-written `Dockerfile` — nothing here ever guesses at how to build an
+app it doesn't understand.
 
-- **1 Internal Library**
-  - `@org/utils` - Shared utilities (private, not published)
+## Packages
 
-## 🚀 Quick Start
+| Package | What it is |
+| --- | --- |
+| [`@dxs/skaffold`](packages/skaffold) | Framework-agnostic core: app discovery, namespace handling, the production profile, generated-file pruning, and the `FrameworkAdapter` contract that framework packages implement. Ships no generator of its own — not useful installed by itself. |
+| [`@dxs/next-skaffold`](packages/next-skaffold) | The only framework adapter so far, for Next.js apps (Dockerfile template, `next.config.js` maintenance, framework detection). Install this one if you just want the feature. |
 
-```bash
-# Clone the repository
-git clone <your-fork-url>
-cd typescript-template
+More framework adapters (Angular and others) are the intended growth path —
+`@dxs/skaffold`'s contract exists so a new one is a self-contained package,
+not a change to the core. Each package's own README documents its
+behavior and conventions in depth; `@dxs/skaffold`'s also documents the
+`FrameworkAdapter` contract for anyone building a new adapter.
 
-# Install dependencies
-npm install
+## Demo workspace
 
-# Build all packages
-npx nx run-many -t build
+- [`apps/demo`](apps/demo) — a small Next.js app used to develop and
+  validate the plugins end-to-end. It has its own `k8s/` folder, so it
+  doubles as a real, working example of what a consuming app looks like.
+- [`packages/demo-lib`](packages/demo-lib) — a shared React library
+  `apps/demo` depends on, exercising the dependency-sync path (workspace
+  libraries copied into the Docker build context, not just the app's own
+  source).
 
-# Run tests
-npx nx run-many -t test
+## Getting started
 
-# Lint all projects
-npx nx run-many -t lint
-
-# Run everything in parallel
-npx nx run-many -t lint test build --parallel=3
-
-# Visualize the project graph
-npx nx graph
-```
-
-## ⭐ Featured Nx Capabilities
-
-This repository showcases several powerful Nx features:
-
-### 1. 🔒 Module Boundaries
-
-Enforces architectural constraints using tags. Each package has specific dependencies it can use:
-
-- `scope:shared` (utils) - Can be used by all packages
-- `scope:strings` - Can only depend on shared utilities
-- `scope:async` - Can only depend on shared utilities
-- `scope:colors` - Can only depend on shared utilities
-
-**Try it out:**
+Requires minikube, Skaffold, and a BuildKit-capable Docker installed
+locally.
 
 ```bash
-# See the current project graph and boundaries
-npx nx graph
+pnpm install
 
-# View a specific project's details
-npx nx show project @org/strings --web
+# start (or resume) the local cluster
+pnpm nx minikube
+
+# generate configs (Dockerfile, skaffold/*.yaml, next.config.js) and start
+# the dev loop: live image rebuilds, file sync, and port-forwarding for
+# every k8s Service
+pnpm nx skaffold
+
+# same, but building the production stage of each Dockerfile instead
+pnpm nx skaffold --configuration=production
 ```
 
-[Learn more about module boundaries →](https://nx.dev/docs/features/enforce-module-boundaries)
-
-### 2. 🛠️ Custom Run Commands
-
-Packages can define custom commands beyond standard build/test/lint:
+`nx sync` runs automatically as part of the `skaffold` target. To run it on
+its own — e.g. to see what would change without starting Skaffold at all:
 
 ```bash
-# Run the custom build-base command for strings package
-npx nx run @org/strings:build-base
-
-# See all available targets for a project
-npx nx show project @org/strings
+pnpm nx sync
 ```
 
-### 3. 🔧 Self-Healing CI
+To try it against a new app: add one to the workspace, give it a `k8s/`
+folder with at least one manifest, and run `nx sync` — its Dockerfile,
+namespace, and skaffold config all appear with no further wiring.
 
-The CI pipeline includes `nx fix-ci` which automatically identifies and suggests fixes for common issues. To test it, you can make a change to `async-retry.spec.ts` so that it fails, and create a PR.
+## Development
+
+Standard Nx/pnpm monorepo commands:
 
 ```bash
-# Run tests and see the failure
-npx nx run @org/async:test
-
-# In CI, this command provides automated fixes
-npx nx fix-ci
+pnpm nx run-many -t build lint test typecheck                          # everything
+pnpm nx run-many -t build lint test typecheck -p skaffold,next-skaffold # just the plugins
+pnpm nx graph                                                           # visualize the project graph
 ```
 
-[Learn more about self-healing CI →](https://nx.dev/docs/features/ci-features/self-healing-ci)
+## Publishing
 
-### 4. 📦 Package Publishing
-
-Manage releases and publishing with Nx Release:
+Packages are released under the `@dxs` npm scope via
+[Nx Release](https://nx.dev/docs/features/manage-releases):
 
 ```bash
-# Dry run to see what would be published
-npx nx release --dry-run
-
-# Version and release packages
-npx nx release
-
-# Publish only specific packages
-npx nx release publish --projects=@org/strings,@org/colors
+pnpm nx local-registry   # start a local Verdaccio registry for the @dxs scope
+pnpm nx local-publish    # nx release publish against that local registry
+pnpm nx release-commit   # nx release --skip-publish (version + changelog only)
 ```
-
-[Learn more about Nx Release →](https://nx.dev/docs/features/manage-releases)
-
-## 📁 Project Structure
-
-```
-├── packages/
-│   ├── strings/     [scope:strings] - String utilities (publishable)
-│   ├── async/       [scope:async]   - Async utilities (publishable)
-│   ├── colors/      [scope:colors]  - Color utilities (publishable)
-│   └── utils/       [scope:shared]  - Shared utilities (private)
-├── nx.json          - Nx configuration
-├── tsconfig.json    - TypeScript configuration
-└── eslint.config.mjs - ESLint with module boundary rules
-```
-
-## 🏷️ Understanding Tags
-
-This repository uses tags to enforce module boundaries:
-
-| Package        | Tag             | Can Import From        |
-| -------------- | --------------- | ---------------------- |
-| `@org/utils`   | `scope:shared`  | Nothing (base library) |
-| `@org/strings` | `scope:strings` | `scope:shared`         |
-| `@org/async`   | `scope:async`   | `scope:shared`         |
-| `@org/colors`  | `scope:colors`  | `scope:shared`         |
-
-The ESLint configuration enforces these boundaries, preventing circular dependencies and maintaining clean architecture.
-
-## 🧪 Testing Module Boundaries
-
-To see module boundary enforcement in action:
-
-1. Try importing `@org/colors` into `@org/strings`
-2. Run `npx nx run @org/strings:lint`
-3. You'll see an error about violating module boundaries
-
-## 📚 Useful Commands
-
-```bash
-# Project exploration
-npx nx graph                                    # Interactive dependency graph
-npx nx list                                     # List installed plugins
-npx nx show project @org/strings --web              # View project details
-
-# Development
-npx nx run @org/strings:build                           # Build a specific package
-npx nx run @org/async:test                              # Test a specific package
-npx nx run @org/colors:lint                             # Lint a specific package
-
-# Running multiple tasks
-npx nx run-many -t build                       # Build all projects
-npx nx run-many -t test --parallel=3          # Test in parallel
-npx nx run-many -t lint test build            # Run multiple targets
-
-# Affected commands (great for CI)
-npx nx affected -t build                       # Build only affected projects
-npx nx affected -t test                        # Test only affected projects
-
-# Release management
-npx nx release --dry-run                       # Preview release changes
-npx nx release                                 # Create a new release
-```
-
-## Nx Cloud
-
-Nx Cloud ensures a [fast and scalable CI](https://nx.dev/nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
-
-- [Remote caching](https://nx.dev/docs/features/ci-features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/docs/features/ci-features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/docs/features/ci-features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/docs/features/ci-features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Install Nx Console
-
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
-
-[Install Nx Console &raquo;](https://nx.dev/docs/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## 🔗 Learn More
-
-- [Nx Documentation](https://nx.dev/docs)
-- [Crafting Your Workspace Tutorial](https://nx.dev/docs/getting-started/tutorials/crafting-your-workspace)
-- [Module Boundaries](https://nx.dev/docs/features/enforce-module-boundaries)
-- [Releasing Packages](https://nx.dev/docs/features/manage-releases)
-- [Nx Cloud](https://nx.dev/nx-cloud)
-
-## 💬 Community
-
-Join the Nx community:
-
-- [Discord](https://go.nx.dev/community)
-- [X (Twitter)](https://twitter.com/nxdevtools)
-- [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [YouTube](https://www.youtube.com/@nxdevtools)
-- [Blog](https://nx.dev/blog)
