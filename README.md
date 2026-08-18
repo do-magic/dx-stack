@@ -10,6 +10,16 @@ project graph.
 Today that means a local [minikube](https://minikube.sigs.k8s.io/) cluster
 only — no remote cluster, registry push, or CI deployment pipeline yet.
 
+Apps aren't meant to run in isolation, either. Another explicit goal is
+running them alongside the supporting infrastructure a real deployment
+depends on — databases with persistent volumes, an OpenTelemetry stack,
+anything else that needs to outlive any single dev session — in the same
+local cluster. That infrastructure is hand-maintained in
+`skaffold/infra.yaml`, deliberately kept outside both the generated,
+per-app config and the ephemeral `skaffold dev` lifecycle; see
+[`@dx-stack/skaffold`'s README](packages/skaffold#infrastructure-infrayaml)
+for how the two are kept separate.
+
 ## How it works
 
 Wire a framework adapter's `sync` generator into an Nx target (or Nx's

@@ -13,7 +13,7 @@ maintenance.
 ## Installation
 
 ```sh
-npm install @dx-stack/next-skaffold
+pnpm nx add @dx-stack/next-skaffold
 ```
 
 Then add it to your `syncGenerators`, e.g. on whichever Nx target you use to

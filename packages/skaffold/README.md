@@ -148,8 +148,14 @@ declare it explicitly.
 ## Infrastructure (`infra.yaml`)
 
 `skaffold/infra.yaml` (and anything under `skaffold/infra/`) is entirely
-hand-maintained, for components meant to outlive any single dev session —
-a namespace today, potentially a database with a persistent volume later.
+hand-maintained, for components meant to outlive any single dev session.
+One of this project's explicit goals is running an app's supporting
+infrastructure — databases with persistent volumes, an OpenTelemetry
+collector/observability stack, message brokers, anything else a real
+deployment depends on — right alongside the apps themselves in the same
+local cluster; `infra.yaml` is where that lives. Right now it only declares
+the `infra` namespace those components will eventually sit in.
+
 It's deliberately **not** `requires`-loaded by the generated
 `skaffold/skaffold.yaml`: `skaffold dev` tears down everything it deployed
 when it exits, and bundling infra into that same lifecycle would mean losing
