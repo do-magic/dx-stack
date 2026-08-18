@@ -16,8 +16,6 @@ build:
             dest: .
           - src: apps/demo/public/**/*
             dest: .
-          - src: packages/demo-lib/src/**/*
-            dest: .
   local:
     useDockerCLI: true
     useBuildkit: true

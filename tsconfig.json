@@ -4,16 +4,13 @@
   "files": [],
   "references": [
     {
-      "path": "./packages/next-skaffold"
-    },
-    {
       "path": "./apps/demo"
     },
     {
-      "path": "./packages/skaffold"
+      "path": "./packages/next-skaffold"
     },
     {
-      "path": "./packages/demo-lib"
+      "path": "./packages/skaffold"
     }
   ],
   "compilerOptions": {}

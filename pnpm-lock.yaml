@@ -155,9 +155,6 @@ importers:
 
   apps/demo:
     dependencies:
-      '@dx-stack/demo-lib':
-        specifier: workspace:*
-        version: link:../../packages/demo-lib
       next:
         specifier: 'catalog:'
         version: 16.1.7(@babel/core@7.29.7(supports-color@8.1.1))(babel-plugin-macros@3.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.97.2)
@@ -167,16 +164,6 @@ importers:
       react-dom:
         specifier: 'catalog:'
         version: 19.2.8(react@19.2.8)
-
-  packages/demo-lib:
-    dependencies:
-      react:
-        specifier: 'catalog:'
-        version: 19.2.8
-    devDependencies:
-      next:
-        specifier: 'catalog:'
-        version: 16.1.7(@babel/core@7.29.7(supports-color@8.1.1))(babel-plugin-macros@3.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.97.2)
 
   packages/next-skaffold:
     dependencies:

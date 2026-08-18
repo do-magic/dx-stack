@@ -13,19 +13,11 @@ export default [
         'error',
         {
           ignoredFiles: ['{projectRoot}/eslint.config.{js,cjs,mjs,ts,cts,mts}'],
-          // '@dx-stack/demo-lib' is a non-buildable sibling (no `build`
-          // target), which this rule's own workspace-dependency resolution
-          // excludes by design ("otherwise it cannot be a dependency in
-          // package.json"). 'next'/'react'/'react-dom' are only ever used
+          // 'next'/'react'/'react-dom' are only ever used
           // implicitly - JSX runtime, next-env.d.ts, next.config.js
           // conventions - never via an explicit import statement this rule's
           // static analysis can attribute to a source file.
-          ignoredDependencies: [
-            '@dx-stack/demo-lib',
-            'next',
-            'react',
-            'react-dom',
-          ],
+          ignoredDependencies: ['next', 'react', 'react-dom'],
         },
       ],
     },

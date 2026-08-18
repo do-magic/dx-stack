@@ -47,10 +47,6 @@ behavior and conventions in depth; `@dx-stack/skaffold`'s also documents the
 - [`apps/demo`](apps/demo) — a small Next.js app used to develop and
   validate the plugins end-to-end. It has its own `k8s/` folder, so it
   doubles as a real, working example of what a consuming app looks like.
-- [`packages/demo-lib`](packages/demo-lib) — a shared React library
-  `apps/demo` depends on, exercising the dependency-sync path (workspace
-  libraries copied into the Docker build context, not just the app's own
-  source).
 
 ## Getting started
 
