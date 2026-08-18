@@ -8,3 +8,4 @@ export type {
 } from './lib/framework-adapter';
 export { GENERATED_FILE_MARKER } from './lib/framework-adapter';
 export { createSkaffoldSyncGenerator } from './lib/create-sync-generator';
+export { createSkaffoldInitGenerator } from './lib/create-init-generator';
