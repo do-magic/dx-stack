@@ -32,9 +32,10 @@ export interface SyncPath {
  * (scanning for `k8s/*.yaml`), namespace assignment/validation,
  * port-forward derivation, skaffold.yaml/production-profile assembly,
  * generated-file marker + pruning, image-name validation, the app's own
- * default `sync.manual` paths (`src/**\/*`, `public/**\/*`, unconditional for
- * every qualifying app), and the fallback for an app no adapter recognizes
- * but which already has a hand-written Dockerfile. Everything below is
+ * default `sync.manual` paths (`src/**\/*` unconditionally, `public/**\/*`
+ * too if the app has one — both regardless of framework), and the fallback
+ * for an app no adapter recognizes but which already has a hand-written
+ * Dockerfile. Everything below is
  * what's left: turning a recognized app into a Dockerfile + framework
  * config, plus any *additional* sync paths its dependencies need.
  */

@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: svc
+  namespace: apps
+  labels:
+    app: svc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: svc
+  template:
+    metadata:
+      labels:
+        app: svc
+    spec:
+      containers:
+        - name: svc
+          image: svc
+          ports:
+            - containerPort: 3000
+          env:
+            - name: PORT
+              value: '3000'

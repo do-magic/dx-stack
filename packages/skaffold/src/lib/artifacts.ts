@@ -1,4 +1,4 @@
-import { Tree } from '@nx/devkit';
+import { Tree, joinPathFragments } from '@nx/devkit';
 import type {
   FrameworkAdapter,
   WorkspaceApp,
@@ -31,12 +31,15 @@ export function buildArtifact(
       ...(target ? { target } : {}),
     },
     sync: {
-      // the app's own src/**/* and public/**/* are always synced,
-      // regardless of framework — only the dependency paths (above) are
-      // adapter-specific
+      // the app's own src/**/* is always synced, regardless of framework;
+      // public/**/* only if the app actually has one (frameworks without a
+      // static-assets folder, e.g. Nest, don't) — only the dependency paths
+      // (above) are adapter-specific
       manual: [
         { src: `${app.root}/src/**/*`, dest: '.' },
-        { src: `${app.root}/public/**/*`, dest: '.' },
+        ...(tree.exists(joinPathFragments(app.root, 'public'))
+          ? [{ src: `${app.root}/public/**/*`, dest: '.' }]
+          : []),
         ...dependencySyncPaths,
       ],
     },

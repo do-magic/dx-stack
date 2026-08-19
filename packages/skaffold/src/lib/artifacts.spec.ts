@@ -12,6 +12,8 @@ describe('buildArtifact', () => {
   });
 
   it('sets docker.target to "dev" and includes sync when an adapter activated', () => {
+    tree.write('apps/demo/public/favicon.ico', '');
+
     const artifact = buildArtifact(
       tree,
       { name: 'demo', root: 'apps/demo' },
@@ -25,6 +27,19 @@ describe('buildArtifact', () => {
     expect(artifact.sync.manual).toEqual([
       { src: 'apps/demo/src/**/*', dest: '.' },
       { src: 'apps/demo/public/**/*', dest: '.' },
+    ]);
+  });
+
+  it('omits the public/**/* sync path for an app with no public folder', () => {
+    const artifact = buildArtifact(
+      tree,
+      { name: 'svc', root: 'apps/svc' },
+      fakeAdapter(),
+      [],
+    );
+
+    expect(artifact.sync.manual).toEqual([
+      { src: 'apps/svc/src/**/*', dest: '.' },
     ]);
   });
 
@@ -44,6 +59,7 @@ describe('buildArtifact', () => {
 
   it('has no docker.target for a hand-written Dockerfile with no "dev" stage', () => {
     tree.write('apps/demo/Dockerfile', 'FROM node:24-alpine\n');
+    tree.write('apps/demo/public/favicon.ico', '');
 
     const artifact = buildArtifact(
       tree,
@@ -53,7 +69,7 @@ describe('buildArtifact', () => {
     );
 
     expect(artifact.docker.target).toBeUndefined();
-    // still synced: the app's own default paths are unconditional
+    // still synced: the app's own src/**/* is unconditional
     expect(artifact.sync.manual).toEqual([
       { src: 'apps/demo/src/**/*', dest: '.' },
       { src: 'apps/demo/public/**/*', dest: '.' },

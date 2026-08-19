@@ -209,7 +209,6 @@ describe('createSkaffoldSyncGenerator', () => {
       const config = readConfig(tree, 'skaffold/default.yaml');
       expect(config.build.artifacts[0].sync.manual).toEqual([
         { src: 'apps/demo/src/**/*', dest: '.' },
-        { src: 'apps/demo/public/**/*', dest: '.' },
       ]);
     });
 

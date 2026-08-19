@@ -93,6 +93,10 @@
         "continuous": true,
         "executor": "nx:run-commands",
         "defaultConfiguration": "development",
+        "syncGenerators": [
+          "@dx-stack/next-skaffold:sync",
+          "@dx-stack/nest-skaffold:sync"
+        ],
         "configurations": {
           "development": {
             "command": "eval $(minikube docker-env) && skaffold run -f skaffold/infra.yaml && skaffold dev -f skaffold/skaffold.yaml --port-forward=services"
@@ -100,10 +104,7 @@
           "production": {
             "command": "eval $(minikube docker-env) && skaffold run -f skaffold/infra.yaml && skaffold dev -f skaffold/skaffold.yaml -p production --port-forward=services"
           }
-        },
-        "syncGenerators": [
-          "@dx-stack/next-skaffold:sync"
-        ]
+        }
       }
     }
   },

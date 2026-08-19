@@ -1,0 +1,43 @@
+# syntax=docker/dockerfile:1
+<%- generatedFileMarker %>
+FROM node:24-alpine AS base
+RUN corepack enable && corepack prepare pnpm@11.21.0 --activate
+WORKDIR <%- workspaceDir %>
+
+FROM base AS deps
+COPY pnpm-workspace.yaml pnpm-lock.yaml package.json ./
+<% roots.forEach((root) => { -%>
+COPY <%- root %>/package.json <%- root %>/package.json
+<% }) -%>
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+    pnpm install --frozen-lockfile
+
+FROM deps AS source
+COPY nx.json tsconfig.base.json ./
+<% roots.forEach((root) => { -%>
+COPY <%- root %> <%- root %>
+<% }) -%>
+
+FROM source AS builder
+RUN pnpm exec nx run <%- appName %>:prune --skip-sync
+
+FROM source AS dev
+ENV NODE_ENV=development
+EXPOSE 3000
+CMD ["pnpm", "exec", "nx", "serve", "<%- appName %>", "--skip-sync"]
+
+FROM base AS runner
+WORKDIR <%- workspaceDir %>/<%- appRoot %>/dist
+ENV NODE_ENV=production
+ENV PORT=3000
+RUN addgroup --system --gid 1001 nodejs \
+    && adduser --system --uid 1001 nestjs
+
+COPY --from=builder --chown=nestjs:nodejs <%- workspaceDir %>/<%- appRoot %>/dist ./
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+    pnpm install --prod --frozen-lockfile
+
+USER nestjs
+EXPOSE 3000
+
+CMD ["node", "main.js"]

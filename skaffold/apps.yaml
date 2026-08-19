@@ -16,6 +16,15 @@ build:
             dest: .
           - src: apps/demo/public/**/*
             dest: .
+    - image: svc
+      context: ..
+      docker:
+        dockerfile: apps/svc/Dockerfile
+        target: dev
+      sync:
+        manual:
+          - src: apps/svc/src/**/*
+            dest: .
   local:
     useDockerCLI: true
     useBuildkit: true
@@ -23,6 +32,7 @@ manifests:
   rawYaml:
     - apps-namespace.yaml
     - ../apps/demo/k8s/*.yaml
+    - ../apps/svc/k8s/*.yaml
 deploy:
   kubectl:
     defaultNamespace: apps
@@ -37,6 +47,10 @@ profiles:
           context: ..
           docker:
             dockerfile: apps/demo/Dockerfile
+        - image: svc
+          context: ..
+          docker:
+            dockerfile: apps/svc/Dockerfile
       local:
         useDockerCLI: true
         useBuildkit: true

@@ -1,0 +1,88 @@
+{
+  "name": "@dx-stack/nest-skaffold",
+  "version": "0.1.0",
+  "description": "Nest.js adapter for @dx-stack/skaffold - generates Dockerfiles, Skaffold config, and nest.config.js for one-command Kubernetes deployment",
+  "license": "MIT",
+  "author": "Sebastian Velten <velten.seb@web.de>",
+  "homepage": "https://github.com/do-magic/dx-stack/tree/main/packages/nest-skaffold#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/do-magic/dx-stack.git",
+    "directory": "packages/nest-skaffold"
+  },
+  "bugs": {
+    "url": "https://github.com/do-magic/dx-stack/issues"
+  },
+  "keywords": [
+    "nx",
+    "nx-plugin",
+    "nestjs",
+    "kubernetes",
+    "skaffold",
+    "docker",
+    "devops",
+    "deployment"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "commonjs",
+  "main": "./dist/src/index.js",
+  "module": "./dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "@dx-stack/source": "./src/index.ts",
+      "types": "./dist/src/index.d.ts",
+      "import": "./dist/src/index.js",
+      "default": "./dist/src/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "!**/*.tsbuildinfo",
+    "generators.json",
+    "LICENSE"
+  ],
+  "nx": {
+    "name": "nest-skaffold",
+    "targets": {
+      "build": {
+        "executor": "@nx/js:tsc",
+        "outputs": [
+          "{options.outputPath}"
+        ],
+        "options": {
+          "outputPath": "packages/nest-skaffold/dist",
+          "main": "packages/nest-skaffold/src/index.ts",
+          "tsConfig": "packages/nest-skaffold/tsconfig.lib.json",
+          "generatePackageJson": false,
+          "assets": [
+            {
+              "input": "./packages/nest-skaffold/src",
+              "glob": "**/!(*.ts)",
+              "output": "./src"
+            },
+            {
+              "input": "./packages/nest-skaffold/src",
+              "glob": "**/*.d.ts",
+              "output": "./src"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "dependencies": {
+    "@nx/devkit": "23.1.1",
+    "tslib": "^2.3.0",
+    "@dx-stack/skaffold": "workspace:*",
+    "@types/ejs": "^3.1.5",
+    "ejs": "^6.0.1"
+  },
+  "devDependencies": {
+    "yaml": "^2.9.0"
+  },
+  "generators": "./generators.json"
+}

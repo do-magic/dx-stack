@@ -1,0 +1,14 @@
+{
+  "generators": {
+    "sync": {
+      "factory": "./dist/src/generators/sync/sync",
+      "schema": "./dist/src/generators/sync/schema.json",
+      "description": "sync generator"
+    },
+    "init": {
+      "factory": "./dist/src/generators/init/init",
+      "schema": "./dist/src/generators/init/schema.json",
+      "description": "init generator"
+    }
+  }
+}
