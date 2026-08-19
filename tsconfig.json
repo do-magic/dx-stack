@@ -11,6 +11,9 @@
     },
     {
       "path": "./packages/skaffold"
+    },
+    {
+      "path": "./apps/svc"
     }
   ],
   "compilerOptions": {}
