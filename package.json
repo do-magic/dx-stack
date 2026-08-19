@@ -95,20 +95,10 @@
         "defaultConfiguration": "development",
         "configurations": {
           "development": {
-            "commands": [
-              "eval $(minikube docker-env)",
-              "skaffold run -f skaffold/infra.yaml",
-              "skaffold dev -f skaffold/skaffold.yaml --port-forward=services"
-            ],
-            "parallel": false
+            "command": "eval $(minikube docker-env) && skaffold run -f skaffold/infra.yaml && skaffold dev -f skaffold/skaffold.yaml --port-forward=services"
           },
           "production": {
-            "commands": [
-              "eval $(minikube docker-env)",
-              "skaffold run -f skaffold/infra.yaml",
-              "skaffold dev -f skaffold/skaffold.yaml -p production --port-forward=services"
-            ],
-            "parallel": false
+            "command": "eval $(minikube docker-env) && skaffold run -f skaffold/infra.yaml && skaffold dev -f skaffold/skaffold.yaml -p production --port-forward=services"
           }
         },
         "syncGenerators": [
