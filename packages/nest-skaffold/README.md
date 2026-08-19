@@ -79,7 +79,7 @@ Stages, mirroring `@dx-stack/next-skaffold`'s template shape:
   `prune` already `dependsOn` `build` transitively, this one command builds
   and prunes in a single step.
 - `dev`, a sibling of `builder` also built from `source`: runs `nx serve
-  <app> --skip-sync` as its `CMD` — the long-running, watch-and-restart dev
+<app> --skip-sync` as its `CMD` — the long-running, watch-and-restart dev
   loop, analogous to `next dev`. (Not a `RUN` step: `serve` never exits, so
   it only makes sense as the stage's own entrypoint, invoked once a
   container actually starts from it.)
