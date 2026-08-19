@@ -29,16 +29,20 @@ const TEMPLATE_PATH = join(__dirname, 'dockerfile.ejs');
 
 // assumes a Nest.js app built via @nx/nest (or @nx/node): `nx build`/`nx
 // serve` targets, and a "prune" target (dependsOn: prune-lockfile +
-// copy-workspace-modules) that produces a self-contained dist/ - main.js,
-// a pruned package.json/pnpm-lock.yaml scoped to just the runtime deps
-// actually used, and workspace_modules/ for any workspace-linked ones. The
-// webpack build itself never bundles npm dependencies (confirmed directly:
-// the compiled main.js still `require()`s @nestjs/common etc. as externals),
-// so the runner stage has to `pnpm install --prod` against that pruned
-// manifest to get a real node_modules before it can run.
+// copy-workspace-modules) that produces a self-contained <buildOutputDir>/ -
+// main.js, a pruned package.json/pnpm-lock.yaml scoped to just the runtime
+// deps actually used, and workspace_modules/ for any workspace-linked ones.
+// `buildOutputDir` (e.g. "apps/svc/dist") is resolved by core from the app's
+// real "build" target outputs, not assumed to be "dist" - webpack's own
+// "output.path" can change it. The webpack build itself never bundles npm
+// dependencies (confirmed directly: the compiled main.js still `require()`s
+// @nestjs/common etc. as externals), so the runner stage has to `pnpm
+// install --prod` against that pruned manifest to get a real node_modules
+// before it can run.
 export function buildNestJsDockerfile(
   app: WorkspaceApp,
   dependencies: WorkspaceDependency[],
+  buildOutputDir: string,
 ): string {
   // sorted (and deduplicated by definition, since dependencies never include
   // the app's own root) for deterministic output across regenerations
@@ -49,7 +53,7 @@ export function buildNestJsDockerfile(
     generatedFileMarker: GENERATED_FILE_MARKER,
     workspaceDir: WORKSPACE_DIR,
     appName: app.name,
-    appRoot: app.root,
+    buildOutputDir,
     roots,
   });
 }

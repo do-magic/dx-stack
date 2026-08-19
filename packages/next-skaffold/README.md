@@ -57,7 +57,10 @@ workspace dependencies) → `source` (copies source) → `builder`
 (`nx build <app> --skip-sync`) and, as siblings both built from `source`,
 `dev` (`nx dev <app> --skip-sync`, watching for changes — the stage name
 `@dx-stack/skaffold`'s core requires every adapter's Dockerfile to have) and
-`runner` (the `.next/standalone` production output).
+`runner` (the `<buildOutputDir>/standalone` production output).
+`buildOutputDir` (e.g. `apps/demo/.next`) is passed in by core, resolved from
+the app's own `build` target's Nx-inferred `outputs` — never assumed to be
+`.next`, since Next.js's own `distDir` config can change it.
 
 The `runner` stage sets `ENV HOSTNAME="0.0.0.0"` unconditionally — Next.js's
 standalone `server.js` otherwise binds to whatever `HOSTNAME` happens to be
@@ -89,8 +92,8 @@ Two more literal options were tried and rejected:
 
 `getDependencySyncPaths` contributes one `src/**/*`-style sync entry per
 workspace dependency this Dockerfile actually `COPY`s in — core adds the
-app's own `src/**/*`/`public/**/*` unconditionally, so this only needs to
-cover the extra paths. `next.config.js`, `tsconfig.json`, `package.json`, and
+app's own `src/**/*` unconditionally (and `public/**/*` too if the app has
+one), so this only needs to cover the extra paths. `next.config.js`, `tsconfig.json`, `package.json`, and
 friends are deliberately left out of sync entirely: those either need a
 process restart to take effect at all (config) or an actual `pnpm install`
 (`package.json`), so falling through to skaffold's default rebuild-the-image
@@ -109,7 +112,7 @@ own [Next.js guide](https://docs.docker.com/guides/nextjs/):
   stage — quieter build/dev/runtime logs, and no telemetry pings from
   ephemeral dev or CI containers.
 - `builder`'s `nx build` call gets its own BuildKit cache mount on
-  `<project root>/.next/cache` (`id=next-<app>`, one per app to avoid
+  `<buildOutputDir>/cache` (`id=next-<app>`, one per app to avoid
   collisions), mirroring the `deps` stage's pnpm store cache mount — lets
   Next.js's own incremental compiler cache survive across separate image
   rebuilds (relevant mainly for the `production` profile, since `dev`

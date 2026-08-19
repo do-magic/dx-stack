@@ -22,7 +22,16 @@ function mockApps(apps: { name: string; root: string }[]) {
     nodes: Object.fromEntries(
       apps.map((app) => [
         app.name,
-        { name: app.name, type: 'app', data: { root: app.root } },
+        {
+          name: app.name,
+          type: 'app',
+          data: {
+            root: app.root,
+            targets: {
+              build: { outputs: [`{workspaceRoot}/${app.root}/.next`] },
+            },
+          },
+        },
       ]),
     ),
     dependencies: {},

@@ -5,6 +5,7 @@ describe('buildNestJsDockerfile', () => {
     const dockerfile = buildNestJsDockerfile(
       { name: 'svc', root: 'apps/svc' },
       [],
+      'apps/svc/dist',
     );
 
     expect(dockerfile).toContain('FROM node:24-alpine AS base');
@@ -26,6 +27,7 @@ describe('buildNestJsDockerfile', () => {
     const lines = buildNestJsDockerfile(
       { name: 'svc', root: 'apps/svc' },
       [],
+      'apps/svc/dist',
     ).split('\n');
 
     expect(lines[0]).toBe('# syntax=docker/dockerfile:1');
@@ -36,6 +38,7 @@ describe('buildNestJsDockerfile', () => {
     const dockerfile = buildNestJsDockerfile(
       { name: 'svc', root: 'apps/svc' },
       [{ name: 'shared-lib', root: 'packages/shared-lib' }],
+      'apps/svc/dist',
     );
 
     expect(dockerfile).toContain(
@@ -50,6 +53,7 @@ describe('buildNestJsDockerfile', () => {
     const dockerfile = buildNestJsDockerfile(
       { name: 'svc', root: 'apps/svc' },
       [],
+      'apps/svc/dist',
     );
 
     expect(dockerfile).toContain('WORKDIR /workspace');
@@ -58,5 +62,19 @@ describe('buildNestJsDockerfile', () => {
       'COPY --from=builder --chown=nestjs:nodejs /workspace/apps/svc/dist ./',
     );
     expect(dockerfile).toContain('CMD ["node", "main.js"]');
+  });
+
+  it('respects a custom build output directory, not just "dist"', () => {
+    const dockerfile = buildNestJsDockerfile(
+      { name: 'svc', root: 'apps/svc' },
+      [],
+      'apps/svc/build',
+    );
+
+    expect(dockerfile).toContain('WORKDIR /workspace/apps/svc/build');
+    expect(dockerfile).toContain(
+      'COPY --from=builder --chown=nestjs:nodejs /workspace/apps/svc/build ./',
+    );
+    expect(dockerfile).not.toContain('apps/svc/dist');
   });
 });

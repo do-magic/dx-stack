@@ -71,12 +71,20 @@ export interface FrameworkAdapter {
    * Docker's `# syntax=`) — that's what lets core safely prune it later if
    * the app stops qualifying.
    *
-   * Pure function of `app`/`dependencies` — never touches the `Tree`, so
-   * it's trivial to unit test in isolation.
+   * `buildOutputDir` is the app's real build output directory, workspace-
+   * root-relative (e.g. `apps/svc/dist`, `apps/demo/.next`), resolved from
+   * its own `build` target's Nx-inferred `outputs` — never assume a
+   * framework's conventional default (`dist`, `.next`, ...): it's
+   * independently configurable (webpack's own `output.path`, Next's
+   * `distDir`) and can diverge from it.
+   *
+   * Pure function of `app`/`dependencies`/`buildOutputDir` — never touches
+   * the `Tree`, so it's trivial to unit test in isolation.
    */
   buildDockerfile(
     app: WorkspaceApp,
     dependencies: WorkspaceDependency[],
+    buildOutputDir: string,
   ): string;
 
   /**

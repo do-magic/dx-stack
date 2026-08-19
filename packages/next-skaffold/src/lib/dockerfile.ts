@@ -28,10 +28,14 @@ export const WORKSPACE_DIR = '/workspace';
 const TEMPLATE_PATH = join(__dirname, 'dockerfile.ejs');
 
 // assumes a Next.js app built via @nx/next: `nx build`/`nx dev` targets and a
-// `.next/standalone` production output.
+// `<buildOutputDir>/standalone` production output. `buildOutputDir` (e.g.
+// "apps/demo/.next") is resolved by core from the app's real "build" target
+// outputs, not assumed to be the framework's ".next" default - Next.js's own
+// "distDir" config can change it.
 export function buildNextJsDockerfile(
   app: WorkspaceApp,
   dependencies: WorkspaceDependency[],
+  buildOutputDir: string,
 ): string {
   // sorted (and deduplicated by definition, since dependencies never include
   // the app's own root) for deterministic output across regenerations
@@ -43,6 +47,7 @@ export function buildNextJsDockerfile(
     workspaceDir: WORKSPACE_DIR,
     appName: app.name,
     appRoot: app.root,
+    buildOutputDir,
     roots,
   });
 }

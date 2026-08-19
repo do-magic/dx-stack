@@ -20,7 +20,7 @@ COPY <%- root %> <%- root %>
 <% }) -%>
 
 FROM source AS builder
-RUN --mount=type=cache,id=next-<%- appName %>,target=<%- workspaceDir %>/<%- appRoot %>/.next/cache \
+RUN --mount=type=cache,id=next-<%- appName %>,target=<%- workspaceDir %>/<%- buildOutputDir %>/cache \
     pnpm exec nx build <%- appName %> --skip-sync
 
 FROM source AS dev
@@ -35,8 +35,8 @@ ENV HOSTNAME="0.0.0.0"
 RUN addgroup --system --gid 1001 nodejs \
     && adduser --system --uid 1001 nextjs
 
-COPY --from=builder --chown=nextjs:nodejs <%- workspaceDir %>/<%- appRoot %>/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs <%- workspaceDir %>/<%- appRoot %>/.next/static ./<%- appRoot %>/.next/static
+COPY --from=builder --chown=nextjs:nodejs <%- workspaceDir %>/<%- buildOutputDir %>/standalone ./
+COPY --from=builder --chown=nextjs:nodejs <%- workspaceDir %>/<%- buildOutputDir %>/static ./<%- buildOutputDir %>/static
 COPY --from=builder --chown=nextjs:nodejs <%- workspaceDir %>/<%- appRoot %>/public ./<%- appRoot %>/public
 
 USER nextjs

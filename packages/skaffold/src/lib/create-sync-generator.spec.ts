@@ -15,7 +15,12 @@ vi.mock('@nx/devkit', async (importOriginal) => {
 });
 
 function mockGraph(
-  nodes: { name: string; type?: 'app' | 'lib'; root: string }[],
+  nodes: {
+    name: string;
+    type?: 'app' | 'lib';
+    root: string;
+    buildOutputDir?: string;
+  }[],
   dependencies: Record<string, { target: string }[]> = {},
 ) {
   vi.mocked(createProjectGraphAsync).mockResolvedValue({
@@ -25,7 +30,16 @@ function mockGraph(
         {
           name: node.name,
           type: node.type ?? 'app',
-          data: { root: node.root },
+          data: {
+            root: node.root,
+            targets: {
+              build: {
+                outputs: [
+                  `{workspaceRoot}/${node.buildOutputDir ?? `${node.root}/dist`}`,
+                ],
+              },
+            },
+          },
         },
       ]),
     ),
@@ -180,6 +194,26 @@ describe('createSkaffoldSyncGenerator', () => {
       expect(buildDockerfile).toHaveBeenCalledWith(
         { name: 'demo', root: 'apps/demo' },
         [],
+        'apps/demo/dist',
+      );
+    });
+
+    it("passes the app's real build output directory, not an assumed default", async () => {
+      mockGraph([
+        { name: 'demo', root: 'apps/demo', buildOutputDir: 'apps/demo/build' },
+      ]);
+      addApp(tree, 'demo');
+      const buildDockerfile = vi.fn(() => 'FROM scratch AS dev\n');
+      const syncGenerator = createSkaffoldSyncGenerator([
+        fakeAdapter({ buildDockerfile }),
+      ]);
+
+      await syncGenerator(tree);
+
+      expect(buildDockerfile).toHaveBeenCalledWith(
+        { name: 'demo', root: 'apps/demo' },
+        [],
+        'apps/demo/build',
       );
     });
 

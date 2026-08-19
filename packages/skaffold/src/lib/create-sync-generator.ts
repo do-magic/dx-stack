@@ -9,6 +9,7 @@ import {
   type WorkspaceDependency,
 } from './framework-adapter';
 import { discoverApps } from './app-discovery';
+import { getBuildOutputDir } from './build-output';
 import { DEFAULT_NAMESPACE, getAppNamespace } from './namespace';
 import { getWorkspaceDependencies } from './workspace-dependencies';
 import {
@@ -87,7 +88,11 @@ export function createSkaffoldSyncGenerator(
 
       write(
         joinPathFragments(app.root, 'Dockerfile'),
-        adapter.buildDockerfile(app, dependenciesByApp.get(app.name) ?? []),
+        adapter.buildDockerfile(
+          app,
+          dependenciesByApp.get(app.name) ?? [],
+          getBuildOutputDir(graph, app),
+        ),
       );
 
       adapter.syncFrameworkConfig?.(tree, app);

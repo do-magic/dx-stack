@@ -85,8 +85,11 @@ Stages, mirroring `@dx-stack/next-skaffold`'s template shape:
   container actually starts from it.)
 - `runner`, built fresh from `base` (never from `builder`/`source`, so no
   dev tooling or full source tree ends up in the final image): copies the
-  pruned `dist/` in, runs `pnpm install --prod --frozen-lockfile` against
-  it, and runs `node main.js` as a non-root user.
+  pruned `<buildOutputDir>/` in, runs `pnpm install --prod --frozen-lockfile`
+  against it, and runs `node main.js` as a non-root user. `buildOutputDir`
+  (e.g. `apps/svc/dist`) is passed in by core, resolved from the app's own
+  `build` target's Nx-inferred `outputs` — never assumed to be `dist`, since
+  webpack's own `output.path` can change it.
 
 `WORKDIR`/`WORKSPACE_DIR` and the `roots.forEach` dependency-copying pattern
 are identical to `@dx-stack/next-skaffold` — see that package's README for

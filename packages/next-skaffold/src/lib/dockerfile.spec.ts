@@ -5,6 +5,7 @@ describe('buildNextJsDockerfile', () => {
     const dockerfile = buildNextJsDockerfile(
       { name: 'demo', root: 'apps/demo' },
       [],
+      'apps/demo/.next',
     );
 
     expect(dockerfile).toContain('FROM node:24-alpine AS base');
@@ -30,6 +31,7 @@ describe('buildNextJsDockerfile', () => {
     const lines = buildNextJsDockerfile(
       { name: 'demo', root: 'apps/demo' },
       [],
+      'apps/demo/.next',
     ).split('\n');
 
     expect(lines[0]).toBe('# syntax=docker/dockerfile:1');
@@ -40,6 +42,7 @@ describe('buildNextJsDockerfile', () => {
     const dockerfile = buildNextJsDockerfile(
       { name: 'demo', root: 'apps/demo' },
       [{ name: 'shared-ui', root: 'packages/shared-ui' }],
+      'apps/demo/.next',
     );
 
     expect(dockerfile).toContain(
@@ -52,11 +55,31 @@ describe('buildNextJsDockerfile', () => {
     const dockerfile = buildNextJsDockerfile(
       { name: 'demo', root: 'apps/demo' },
       [],
+      'apps/demo/.next',
     );
 
     expect(dockerfile).toContain('WORKDIR /workspace');
     expect(dockerfile).toContain(
       'COPY --from=builder --chown=nextjs:nodejs /workspace/apps/demo/.next/standalone ./',
     );
+  });
+
+  it('respects a custom build output directory, not just ".next"', () => {
+    const dockerfile = buildNextJsDockerfile(
+      { name: 'demo', root: 'apps/demo' },
+      [],
+      'apps/demo/build',
+    );
+
+    expect(dockerfile).toContain(
+      '--mount=type=cache,id=next-demo,target=/workspace/apps/demo/build/cache',
+    );
+    expect(dockerfile).toContain(
+      'COPY --from=builder --chown=nextjs:nodejs /workspace/apps/demo/build/standalone ./',
+    );
+    expect(dockerfile).toContain(
+      'COPY --from=builder --chown=nextjs:nodejs /workspace/apps/demo/build/static ./apps/demo/build/static',
+    );
+    expect(dockerfile).not.toContain('.next');
   });
 });

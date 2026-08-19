@@ -41,6 +41,7 @@ interface FrameworkAdapter {
   buildDockerfile(
     app: WorkspaceApp,
     dependencies: WorkspaceDependency[],
+    buildOutputDir: string,
   ): string;
   getDependencySyncPaths(dependencies: WorkspaceDependency[]): SyncPath[];
   syncFrameworkConfig?(tree: Tree, app: WorkspaceApp): void;
@@ -61,12 +62,19 @@ interface FrameworkAdapter {
   and it **must** embed this package's exported `GENERATED_FILE_MARKER`
   somewhere after any required leading directive (e.g. Docker's `# syntax=`)
   — that's what lets core safely prune it later if the app stops qualifying.
-  Pure function of `app`/`dependencies` — never touches the `Tree`.
+  `buildOutputDir` is the app's real build output directory, workspace-
+  root-relative (e.g. `apps/svc/dist`, `apps/demo/.next`), resolved by core
+  from the app's own `build` target's Nx-inferred `outputs` — adapters must
+  use it as given rather than assuming a framework's conventional default,
+  since it's independently configurable (webpack's own `output.path`,
+  Next's `distDir`) and can diverge from it. Pure function of
+  `app`/`dependencies`/`buildOutputDir` — never touches the `Tree`.
 - **`getDependencySyncPaths`**: extra `sync.manual` paths beyond the app's
-  own default paths (`src/**/*`, `public/**/*` — unconditional for every
-  qualifying app, regardless of adapter) — typically one entry per workspace
-  dependency the adapter's Dockerfile actually `COPY`s in. Only called for
-  dependencies of an app this same adapter activated for. Pure function.
+  own default paths (`src/**/*` unconditionally, `public/**/*` too if the
+  app has one — both regardless of adapter) — typically one entry per
+  workspace dependency the adapter's Dockerfile actually `COPY`s in. Only
+  called for dependencies of an app this same adapter activated for. Pure
+  function.
 - **`syncFrameworkConfig`** (optional): maintain framework-specific config
   file(s) the build depends on (e.g. Next.js's `output`/`outputFileTracingRoot`
   in `next.config.js`). Unlike the Dockerfile, typically _not_ a fully
